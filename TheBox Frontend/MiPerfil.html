@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box · Mi perfil</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #1c2f48;
+            --navy-text: #c9d4e3;
+            --blue: #2563d9;
+            --blue-active: #2f6fdb;
+            --ink: #0f1b33;
+            --muted: #5d6879;
+            --bg: #f3f7fc;
+            --card: #ffffff;
+            --line: #dde5f0;
+            --info: #e4edfa;
+            --radius: 10px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+            color: var(--ink);
+            background: #e9eef6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        /* Ventana de la app */
+        .app {
+            width: 100%;
+            max-width: 900px;
+            min-height: 460px;
+            background: var(--bg);
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            overflow: hidden;
+            display: grid;
+            grid-template-columns: 178px 1fr;
+            grid-template-rows: 64px 1fr;
+            grid-template-areas: "brand top" "side main";
+            box-shadow: 0 8px 30px rgba(28, 47, 72, .08);
+        }
+
+        /* Marca */
+        .brand {
+            grid-area: brand;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 0 20px;
+            background: linear-gradient(180deg, #f6f9fe, #eaf1fb);
+        }
+
+            .brand svg {
+                width: 38px;
+                height: 38px;
+                flex: none;
+            }
+
+        .brand-name {
+            font-weight: 700;
+            font-size: 19px;
+            letter-spacing: .02em;
+            line-height: 1;
+        }
+
+        .brand-sub {
+            font-size: 6.5px;
+            letter-spacing: .12em;
+            color: var(--muted);
+            margin-top: 3px;
+        }
+
+        /* Barra superior */
+        .top {
+            grid-area: top;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 28px;
+            padding: 0 28px;
+            background: linear-gradient(180deg, #f6f9fe, #eaf1fb);
+        }
+
+        .icon-btn {
+            background: none;
+            border: 0;
+            padding: 4px;
+            cursor: pointer;
+            color: var(--ink);
+            display: grid;
+            place-items: center;
+            border-radius: 6px;
+        }
+
+        .user-btn {
+            background: none;
+            border: 0;
+            font: inherit;
+            font-size: 14px;
+            color: var(--ink);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 6px;
+        }
+
+            .icon-btn:focus-visible, .user-btn:focus-visible, .nav a:focus-visible, .btn:focus-visible {
+                outline: 2px solid var(--blue);
+                outline-offset: 2px;
+            }
+
+        /* Menú lateral */
+        .side {
+            grid-area: side;
+            background: var(--navy);
+            padding: 20px 8px;
+        }
+
+        .nav {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+            .nav a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 11px 14px;
+                border-radius: 8px;
+                color: var(--navy-text);
+                text-decoration: none;
+                font-size: 14px;
+                transition: background .15s, color .15s;
+            }
+
+                .nav a:hover {
+                    background: rgba(255,255,255,.07);
+                    color: #fff;
+                }
+
+                .nav a[aria-current="page"] {
+                    background: var(--blue-active);
+                    color: #fff;
+                    font-weight: 500;
+                }
+
+            .nav svg {
+                width: 19px;
+                height: 19px;
+                flex: none;
+            }
+
+        /* Contenido */
+        .main {
+            grid-area: main;
+            padding: 22px 24px 28px;
+            background: linear-gradient(180deg, #f5f9fe, #f3f7fc);
+        }
+
+        h1 {
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: -.01em;
+            line-height: 1.2;
+        }
+
+        .lead {
+            color: var(--muted);
+            font-size: 15px;
+            margin-top: 4px;
+        }
+
+        .card {
+            margin-top: 16px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            padding: 18px;
+        }
+
+        .card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .btn {
+            background: var(--blue);
+            color: #fff;
+            border: 0;
+            border-radius: 6px;
+            font: inherit;
+            font-size: 14.5px;
+            font-weight: 500;
+            padding: 10px 24px;
+            cursor: pointer;
+            transition: background .15s;
+        }
+
+            .btn:hover {
+                background: #1d52b8;
+            }
+
+        .data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 24px;
+            margin-top: 22px;
+        }
+
+        dt {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        dd {
+            font-size: 16.5px;
+            font-weight: 500;
+            margin-top: 2px;
+            overflow-wrap: anywhere;
+        }
+
+        .notice {
+            margin-top: 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--info);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+            font-size: 15px;
+            line-height: 1.45;
+        }
+
+            .notice svg {
+                width: 28px;
+                height: 28px;
+                flex: none;
+                color: var(--blue);
+            }
+
+        /* Responsive */
+        @media (max-width: 720px) {
+            body {
+                padding: 0;
+                display: block;
+                background: var(--bg);
+            }
+
+            .app {
+                border: 0;
+                border-radius: 0;
+                min-height: 100vh;
+                grid-template-columns: 1fr;
+                grid-template-rows: 60px auto 1fr;
+                grid-template-areas: "brand" "side" "main";
+            }
+
+            .brand {
+                justify-content: space-between;
+            }
+
+            .top {
+                position: absolute;
+                top: 0;
+                right: 0;
+                height: 60px;
+                padding: 0 16px;
+                gap: 12px;
+                background: none;
+            }
+
+            .side {
+                padding: 8px;
+                overflow-x: auto;
+            }
+
+            .nav {
+                flex-direction: row;
+            }
+
+                .nav a {
+                    white-space: nowrap;
+                    padding: 10px 12px;
+                }
+
+            .data {
+                grid-template-columns: 1fr;
+            }
+
+            .user-btn span {
+                display: none;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app">
+        <!-- Marca -->
+        <div class="brand">
+            <svg viewBox="0 0 40 40" aria-hidden="true">
+                <path d="M20 3 35 11.5v17L20 37 5 28.5v-17z" fill="#2b5fc7" />
+                <path d="M20 3 35 11.5 20 20 5 11.5z" fill="#4c86ee" />
+                <path d="M20 20v17L5 28.5v-17z" fill="#1b3f93" />
+                <rect x="15.5" y="21" width="9" height="7.5" rx="1.5" fill="#fff" />
+                <path d="M17.5 21v-2a2.5 2.5 0 0 1 5 0v2" fill="none" stroke="#fff" stroke-width="1.5" />
+            </svg>
+            <div>
+                <div class="brand-name">THE BOX</div>
+                <div class="brand-sub">GESTIÓN DE SEGUROS</div>
+            </div>
+        </div>
+
+        <!-- Barra superior -->
+        <header class="top">
+            <button class="icon-btn" aria-label="Notificaciones">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>
+            </button>
+            <button class="user-btn" aria-haspopup="menu">
+                <span>Juan Pérez</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+        </header>
+
+        <!-- Menú lateral -->
+        <aside class="side">
+            <nav aria-label="Principal">
+                <ul class="nav">
+                    <li>
+                        <a href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 9-8 9 8" /><path d="M5 10v10h5v-6h4v6h5V10" /></svg>Inicio
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z" /><path d="M14 3v5h5" /></svg>Mis pólizas
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18" /><path d="m9 15 2 2 4-4" /></svg>Mis pagos
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21V9l8-6 8 6v12" /><circle cx="12" cy="11" r="2.5" /><path d="M7 21c0-3 2-5 5-5s5 2 5 5" /></svg>Mis siniestros
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9" /><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0" /></svg>Notificaciones
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" aria-current="page">
+                            <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="8" r="4" /><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7z" /></svg>Mi perfil
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </aside>
+
+        <!-- Contenido -->
+        <main class="main">
+            <h1>Mi perfil</h1>
+            <p class="lead">Consultá tu información personal.</p>
+
+            <section class="card" aria-labelledby="datos-titulo">
+                <div class="card-head">
+                    <h2 id="datos-titulo">Datos personales</h2>
+                    <button class="btn" type="button">Cambiar contraseña</button>
+                </div>
+
+                <dl class="data">
+                    <div><dt>Nombre y apellido</dt><dd>Juan Pérez</dd></div>
+                    <div><dt>DNI</dt><dd>30.123.456</dd></div>
+                    <div><dt>Email</dt><dd>juanperez@email.com</dd></div>
+                    <div><dt>Teléfono</dt><dd>11 1234 5678</dd></div>
+                </dl>
+            </section>
+
+            <div class="notice" role="note">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 0 1 6 0v3zm3 4a1.8 1.8 0 0 1 1 3.3V19h-2v-1.7A1.8 1.8 0 0 1 12 14z" /></svg>
+                <p>Si necesitás actualizar alguno de tus datos, comunicate con nuestro centro de atención al cliente.</p>
+            </div>
+        </main>
+    </div>
+
+</body>
+</html>

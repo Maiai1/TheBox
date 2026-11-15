@@ -1,0 +1,471 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Portal Asegurados</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --line: #e5e7eb;
+            --green: #22a06b;
+            --pill: #dbe8fb;
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            background: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column
+        }
+
+        header, footer, main {
+            --gutter: max(1.75rem,calc((100% - 76rem) / 2))
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem var(--gutter);
+            background: #fff;
+            border-bottom: 1px solid #eef0f4
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.5625rem;
+            letter-spacing: 0.0312rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: 0.625rem;
+            letter-spacing: 0.1rem;
+            color: var(--navy);
+            margin-top: 0.25rem;
+            font-weight: 500
+        }
+
+        .help {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem
+        }
+
+            .help small {
+                display: block;
+                font-size: 0.875rem;
+                color: var(--ink);
+                font-weight: 500
+            }
+
+            .help strong {
+                display: block;
+                font-size: 1rem;
+                color: var(--blue);
+                font-weight: 700;
+                letter-spacing: 0.0187rem
+            }
+
+        main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: minmax(0,1fr) 26.25rem;
+            gap: 2.5rem;
+            padding: 2.25rem var(--gutter) 1.75rem;
+            align-content: start;
+            background: linear-gradient(135deg,#eef4fd 0%,#f7f9fd 55%,#eaf1fb 100%);
+            position: relative;
+            overflow: hidden
+        }
+
+        .left {
+            position: relative;
+            padding-bottom: 5.625rem;
+            max-width: 37.5rem;
+            min-height: 32.5rem
+        }
+
+        .pill {
+            display: inline-block;
+            background: var(--pill);
+            color: #1d4f9f;
+            font-weight: 600;
+            font-size: 0.8125rem;
+            padding: 0.5625rem 1rem;
+            border-radius: 62.4375rem;
+            margin-bottom: 1.375rem;
+            letter-spacing: 0.0125rem
+        }
+
+        h1 {
+            font-size: 2.125rem;
+            line-height: 1.15;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: 1.125rem
+        }
+
+        .lead {
+            font-size: 0.9688rem;
+            line-height: 1.5;
+            color: var(--text);
+            margin-bottom: 1.25rem;
+            max-width: 29.375rem
+        }
+
+        ul {
+            list-style: none;
+            display: grid;
+            gap: 0.875rem;
+            max-width: 29.375rem;
+            position: relative;
+            z-index: 2
+        }
+
+        li {
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+            font-size: 0.9062rem;
+            line-height: 1.4;
+            color: var(--text)
+        }
+
+            li b {
+                color: var(--ink);
+                font-weight: 700
+            }
+
+        .check {
+            flex: none;
+            width: 1.375rem;
+            height: 1.375rem;
+            border-radius: 50%;
+            background: var(--green);
+            display: grid;
+            place-items: center;
+            margin-top: 1px
+        }
+
+        .car {
+            position: absolute;
+            right: -60px;
+            bottom: 2.5rem;
+            width: 21.25rem;
+            z-index: 1;
+            opacity: .95
+        }
+
+        .quote {
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: #fff;
+            border: 1.5px solid var(--blue);
+            border-radius: 0.75rem;
+            padding: 0.875rem 1.125rem;
+            color: var(--navy);
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-decoration: none;
+            width: min(100%,26.875rem);
+            box-shadow: 0 0.25rem 0.875rem rgba(37,99,235,.08)
+        }
+
+            .quote .arrow {
+                margin-left: auto
+            }
+
+            .quote:hover {
+                background: #f4f8ff
+            }
+
+        .card {
+            align-self: start;
+            background: #fff;
+            border-radius: 1rem;
+            padding: 1.625rem 1.625rem 1.375rem;
+            box-shadow: 0 0.625rem 2.1875rem rgba(30,60,120,.12);
+            border: 1px solid #edf0f6;
+            position: relative;
+            z-index: 2
+        }
+
+            .card h2 {
+                font-size: 1.5625rem;
+                color: var(--ink);
+                font-weight: 800;
+                margin-bottom: 0.5rem
+            }
+
+            .card .sub {
+                font-size: 0.8438rem;
+                color: var(--muted);
+                line-height: 1.45;
+                margin-bottom: 1.25rem
+            }
+
+        label {
+            display: block;
+            font-size: 0.875rem;
+            color: var(--ink);
+            font-weight: 500;
+            margin-bottom: 0.5rem
+        }
+
+        .field {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            border: 1px solid #d9dde5;
+            border-radius: 0.625rem;
+            padding: 0 0.875rem;
+            height: 2.875rem;
+            background: #f6f7fa;
+            margin-bottom: 1.125rem
+        }
+
+            .field:focus-within {
+                border-color: var(--blue);
+                box-shadow: 0 0 0 0.1875rem rgba(37,99,235,.15);
+                background: #fff
+            }
+
+            .field input {
+                flex: 1;
+                border: 0;
+                background: transparent;
+                font: inherit;
+                font-size: 0.9375rem;
+                color: var(--ink);
+                outline: none;
+                min-width: 0
+            }
+
+            .field svg {
+                flex: none
+            }
+
+        .btn {
+            width: 100%;
+            height: 3rem;
+            border: 0;
+            border-radius: 0.625rem;
+            background: var(--blue);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: 0.9688rem;
+            cursor: pointer;
+            margin: 0.25rem 0 1.375rem
+        }
+
+            .btn:hover {
+                background: var(--blue-dark)
+            }
+
+        .first {
+            border-top: 1px solid var(--line);
+            padding-top: 1.125rem;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start
+        }
+
+            .first strong {
+                display: block;
+                color: var(--ink);
+                font-size: 0.875rem;
+                margin-bottom: 0.25rem
+            }
+
+            .first p {
+                font-size: 0.75rem;
+                line-height: 1.45;
+                color: var(--text)
+            }
+
+        footer {
+            display: flex;
+            justify-content: space-between;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            padding: 1rem var(--gutter);
+            font-size: 0.8125rem;
+            color: var(--muted);
+            background: #fff;
+            border-top: 1px solid #eef0f4
+        }
+
+        @media (max-width:860px) {
+            html {
+                font-size: 16px
+            }
+
+            main {
+                grid-template-columns: 1fr;
+                padding: 1.25rem 1rem;
+                gap: 1.5rem
+            }
+
+            .left {
+                max-width: none;
+                padding-bottom: 0
+            }
+
+            .car {
+                display: none
+            }
+
+            .quote {
+                position: static;
+                margin-top: 1.25rem;
+                width: 100%
+            }
+
+            header, footer {
+                padding: 0.875rem 1rem
+            }
+
+            .left {
+                min-height: 0
+            }
+
+            h1 {
+                font-size: 1.75rem
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.875rem;height:2.875rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div>
+                <div class="brand-name">THE BOX</div>
+                <div class="brand-sub">GESTIÓN DE SEGUROS</div>
+            </div>
+        </div>
+        <div class="help">
+            <svg style="width:2.125rem;height:2.125rem" viewBox="0 0 24 24" fill="none" stroke="#1d4f9f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 14v-2a8 8 0 0 1 16 0v2" />
+                <rect x="2.5" y="13" width="4" height="6" rx="1.5" />
+                <rect x="17.5" y="13" width="4" height="6" rx="1.5" />
+                <path d="M19.5 19c0 1.7-2 2.5-5 2.5" />
+            </svg>
+            <div><small>Mesa de Ayuda:</small><strong>0800-BOX-SEGURO</strong></div>
+        </div>
+    </header>
+
+    <main>
+        <section class="left">
+            <span class="pill">NUEVAS COTIZACIONES</span>
+            <h1>Asegurá tu vehículo<br>en simples pasos</h1>
+            <p class="lead">Solicitá tu presupuesto en línea. Ingresá los datos de tu vehículo, adjuntá las fotos para inspección digital y un asesor especializado evaluará tu cobertura al instante.</p>
+            <ul>
+                <li>
+                    <span class="check"><svg style="width:0.8125rem;height:0.8125rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>
+                    <span><b>Coberturas a medida:</b> Tercero Completo, Resp. Civil<br>y Todo Riesgo</span>
+                </li>
+                <li>
+                    <span class="check"><svg style="width:0.8125rem;height:0.8125rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>
+                    <span><b>Emisión 100% digital</b> y descarga inmediata<br>de credenciales</span>
+                </li>
+                <li>
+                    <span class="check"><svg style="width:0.8125rem;height:0.8125rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>
+                    <span>Pólizas con vigencia anual y pago en cuotas mensuales</span>
+                </li>
+            </ul>
+
+            <svg class="car" viewBox="0 0 340 130" fill="none" aria-hidden="true">
+                <ellipse cx="170" cy="118" rx="150" ry="9" fill="#9fb4d3" opacity=".35" />
+                <path d="M20 92c0-12 8-20 22-24l50-12c18-14 40-24 66-24 28 0 50 8 66 22l36 8c14 3 22 12 22 26v10c0 5-4 8-9 8H29c-5 0-9-3-9-8V92Z" fill="#b9c6da" />
+                <path d="M100 58c16-12 36-20 60-20 26 0 44 7 58 20H100Z" fill="#e8eef7" />
+                <path d="M112 56c14-9 30-14 48-14v14h-48Z" fill="#4a5f84" opacity=".55" />
+                <path d="M168 42c18 0 34 4 46 14h-46V42Z" fill="#4a5f84" opacity=".55" />
+                <path d="M30 94h280" stroke="#8fa3c3" stroke-width="2" />
+                <circle cx="92" cy="106" r="19" fill="#2b3447" />
+                <circle cx="92" cy="106" r="10" fill="#c7d0de" />
+                <circle cx="248" cy="106" r="19" fill="#2b3447" />
+                <circle cx="248" cy="106" r="10" fill="#c7d0de" />
+                <rect x="296" y="82" width="22" height="7" rx="3" fill="#f4f7fb" />
+            </svg>
+
+            <a class="quote" href="#">
+                <svg style="width:1.5rem;height:1.5rem" viewBox="0 0 24 24" fill="none" stroke="#1d4f9f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="4" /><path d="M3 21v-1a6 6 0 0 1 6-6h2" /><path d="M19 14v6M16 17h6" /></svg>
+                <span>No soy cliente — Solicitar Presupuesto</span>
+                <svg class="arrow" style="width:1.125rem;height:1.125rem" viewBox="0 0 24 24" fill="none" stroke="#1d4f9f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 6 6 6-6 6" /></svg>
+            </a>
+        </section>
+
+        <section class="card">
+            <h2>Portal Asegurados</h2>
+            <p class="sub">Ingresá con tus credenciales asignadas para autogestionar tus pólizas y pagos.</p>
+            <form onsubmit="return false">
+                <label for="dni">Número de Documento (DNI)</label>
+                <div class="field">
+                    <svg style="width:1.25rem;height:1.25rem" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>
+                    <input id="dni" type="text" inputmode="numeric" placeholder="Ej: 38450123" value="38450123" autocomplete="username">
+                </div>
+                <label for="pass">Contraseña</label>
+                <div class="field">
+                    <svg style="width:1.25rem;height:1.25rem" viewBox="0 0 24 24" fill="none" stroke="#6b7280" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+                    <input id="pass" type="password" value="12345678901" autocomplete="current-password">
+                </div>
+                <button class="btn" type="submit">Ingresar al Portal</button>
+            </form>
+            <div class="first">
+                <svg style="width:1.375rem;height:1.375rem" viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:2px"><rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3" /></svg>
+                <div>
+                    <strong>¿Primer ingreso?</strong>
+                    <p>Recordá que la compañía te asignó una contraseña provisoria genérica. El sistema te solicitará renovarla al acceder.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span>© 2026 The Box Seguros S.A. Todos los derechos reservados.</span>
+        <span>Plataforma Web de Autogestión &nbsp;|&nbsp; Versión 2.0</span>
+    </footer>
+
+</body>
+</html>

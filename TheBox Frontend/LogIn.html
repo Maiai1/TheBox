@@ -100,7 +100,7 @@
             gap: 2.5rem;
             padding: 2.25rem var(--gutter) 1.75rem;
             align-content: start;
-            background: linear-gradient(135deg,#eef4fd 0%,#f7f9fd 55%,#eaf1fb 100%);
+            background: linear-gradient(135deg,#f0f7ff 0%,#eaf3fd 50%,#dfebfc 100%);
             position: relative;
             overflow: hidden
         }
@@ -176,11 +176,20 @@
 
         .car {
             position: absolute;
-            right: -60px;
+            right: -3.75rem;
             bottom: 2.5rem;
             width: 21.25rem;
-            z-index: 1;
-            opacity: .95
+            z-index: 0;
+            pointer-events: none;
+            -webkit-mask-image: linear-gradient(to right,transparent 0,#000 22%,#000 78%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);
+            -webkit-mask-composite: source-in;
+            mask-image: linear-gradient(to right,transparent 0,#000 22%,#000 78%,transparent 100%),linear-gradient(to bottom,transparent 0,#000 18%,#000 82%,transparent 100%);
+            mask-composite: intersect
+        }
+
+        .pill, h1, .lead {
+            position: relative;
+            z-index: 2
         }
 
         .quote {
@@ -415,19 +424,7 @@
                 </li>
             </ul>
 
-            <svg class="car" viewBox="0 0 340 130" fill="none" aria-hidden="true">
-                <ellipse cx="170" cy="118" rx="150" ry="9" fill="#9fb4d3" opacity=".35" />
-                <path d="M20 92c0-12 8-20 22-24l50-12c18-14 40-24 66-24 28 0 50 8 66 22l36 8c14 3 22 12 22 26v10c0 5-4 8-9 8H29c-5 0-9-3-9-8V92Z" fill="#b9c6da" />
-                <path d="M100 58c16-12 36-20 60-20 26 0 44 7 58 20H100Z" fill="#e8eef7" />
-                <path d="M112 56c14-9 30-14 48-14v14h-48Z" fill="#4a5f84" opacity=".55" />
-                <path d="M168 42c18 0 34 4 46 14h-46V42Z" fill="#4a5f84" opacity=".55" />
-                <path d="M30 94h280" stroke="#8fa3c3" stroke-width="2" />
-                <circle cx="92" cy="106" r="19" fill="#2b3447" />
-                <circle cx="92" cy="106" r="10" fill="#c7d0de" />
-                <circle cx="248" cy="106" r="19" fill="#2b3447" />
-                <circle cx="248" cy="106" r="10" fill="#c7d0de" />
-                <rect x="296" y="82" width="22" height="7" rx="3" fill="#f4f7fb" />
-            </svg>
+            <img class="car" src="file:///C:/Users/Maia/Downloads/auto.png" alt="">
 
             <a class="quote" href="#">
                 <svg style="width:1.5rem;height:1.5rem" viewBox="0 0 24 24" fill="none" stroke="#1d4f9f" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="8" r="4" /><path d="M3 21v-1a6 6 0 0 1 6-6h2" /><path d="M19 14v6M16 17h6" /></svg>

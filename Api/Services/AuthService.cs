@@ -16,7 +16,8 @@ public sealed class AuthService(AppDbContext db, TokenService tokens)
 
     public async Task<Resultado<LoginResponse>> LoginAsync(LoginRequest req, CancellationToken ct)
     {
-        const string credencialesInvalidas = "DNI o contraseña incorrectos.";
+        const string credencialesInvalidas =
+            "DNI o contraseña incorrectos, o la cuenta no está habilitada. Si el problema continúa, comunicate con atención al cliente.";
 
         var dni = new string((req.Dni ?? "").Where(char.IsDigit).ToArray());
         if (dni.Length == 0 || string.IsNullOrEmpty(req.Password))
@@ -29,9 +30,13 @@ public sealed class AuthService(AppDbContext db, TokenService tokens)
             return Resultado<LoginResponse>.Falla(StatusCodes.Status401Unauthorized, credencialesInvalidas);
         }
 
-        if (asegurado.BloqueadoHasta is { } hasta && hasta > DateTime.UtcNow)
-            return Resultado<LoginResponse>.Falla(StatusCodes.Status429TooManyRequests,
-                "Cuenta bloqueada temporalmente por intentos fallidos. Probá de nuevo en unos minutos.");
+        var noHabilitada = !asegurado.Activa ||
+                           (asegurado.BloqueadoHasta is { } hasta && hasta > DateTime.UtcNow);
+        if (noHabilitada)
+        {
+            BCrypt.Net.BCrypt.Verify(req.Password, HashFicticio); // mismo tiempo de respuesta que un login normal
+            return Resultado<LoginResponse>.Falla(StatusCodes.Status401Unauthorized, credencialesInvalidas);
+        }
 
         if (!BCrypt.Net.BCrypt.Verify(req.Password, asegurado.PasswordHash))
         {

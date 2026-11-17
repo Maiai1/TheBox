@@ -8,6 +8,8 @@ public sealed record CambiarPasswordRequest(string? PasswordActual, string? Pass
 
 public sealed record CambiarPasswordResponse(string Token);
 
+public sealed record PerfilResponse(string Nombre, string Dni, string? Email, string? Telefono);
+
 public sealed record Resultado<T>(T? Valor, int Status, string[]? Errores)
 {
     public bool Ok => Status == StatusCodes.Status200OK;

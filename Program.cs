@@ -5,6 +5,7 @@ using System.Text;
 using TheBox.Api.Data;
 using TheBox.Api.Endpoints;
 using TheBox.Api.Services;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,6 +45,10 @@ builder.Services.AddAuthorizationBuilder()
         .RequireAssertion(ctx => !ctx.User.HasClaim(TokenService.ClaimPasswordPendiente, "true")));
 
 var app = builder.Build();
+var frontendPath = Path.Combine(builder.Environment.ContentRootPath, "TheBox Frontend");
+var archivos = new PhysicalFileProvider(frontendPath);
+app.UseDefaultFiles(new DefaultFilesOptions { FileProvider = archivos, DefaultFileNames = ["LogIn.html"] });
+app.UseStaticFiles(new StaticFileOptions { FileProvider = archivos });
 
 if (app.Environment.IsDevelopment())
 {

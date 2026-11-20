@@ -14,6 +14,7 @@ builder.WebHost.UseUrls("http://localhost:5080");
 builder.Services.AddDbContext<AppDbContext>(o =>
     o.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<SolicitudService>();
 builder.Services.AddSingleton<TokenService>();
 
 // El HTML se abre desde el disco (origen "null"), por eso en desarrollo se permite cualquier origen.
@@ -59,7 +60,7 @@ if (app.Environment.IsDevelopment())
 app.UseCors("Frontend");
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapAuthEndpoints();
+app.MapPresupuestoEndpoints();
 
 app.Run();

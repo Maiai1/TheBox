@@ -302,7 +302,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background-image: url('banner.jpg'),linear-gradient(100deg,#dfeaf8 0%,#bcd3ec 45%,#7d9cc0 100%);
+            background-image: url('inicio.png'),linear-gradient(100deg,#dfeaf8 0%,#bcd3ec 45%,#7d9cc0 100%);
             background-size: cover;
             background-position: center right
         }
@@ -386,8 +386,8 @@
     <div class="layout">
         <nav aria-label="Menú principal">
             <a href="Inicio.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
-            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
-            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
             <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
             <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
             <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
@@ -404,14 +404,14 @@
                     <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3h6v3H9zM9 11h6M9 15h6" /></svg></span>Mis pólizas</div>
                     <div class="big" id="polizas-num">–</div>
                     <div class="sub">Vigentes</div>
-                    <div class="link"><a href="#">Ver pólizas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                    <div class="link"><a href="MisPolizas.html">Ver pólizas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
                 </article>
 
                 <article class="card">
                     <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4M12 13v4M10.5 14.5h3" /></svg></span>Próximo pago</div>
                     <div class="big" id="pago-fecha">–</div>
                     <div class="sub"><b id="pago-monto"></b></div>
-                    <div class="link"><a href="#">Ver mis pagos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                    <div class="link"><a href="MisPagos.html">Ver mis pagos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
                 </article>
 
                 <article class="card">
@@ -434,62 +434,81 @@
     </div>
 
     <script>
-const API = 'http://localhost:5080';
-const PAGINA_LOGIN = 'LogIn.html';
-const PAGINA_PASSWORD = 'Password.html';
+        const API = 'http://localhost:5080';
+        const PAGINA_LOGIN = 'LogIn.html';
+        const PAGINA_PASSWORD = 'Password.html';
 
-const $ = id => document.getElementById(id);
-const token = sessionStorage.getItem('token');
+        const $ = id => document.getElementById(id);
+        const token = sessionStorage.getItem('token');
 
-function cerrarSesion() {
-  sessionStorage.clear();
-  location.replace(PAGINA_LOGIN);
-}
+        function cerrarSesion() {
+            sessionStorage.clear();
+            location.replace(PAGINA_LOGIN);
+        }
 
-// DATOS DE EJEMPLO: todavía no hay endpoint de pólizas, pagos ni siniestros.
-// Cuando existan, reemplazar este objeto por la respuesta de la API.
-const resumen = {
-  polizas:    { vigentes: 2 },
-  pago:       { fecha: '15/04/2025', monto: 25000 },
-  siniestros: { cantidad: 1, estado: 'En análisis' }
-};
+        // DATOS DE EJEMPLO: todavía no hay endpoint de siniestros (pólizas y pagos ya son reales).
+        // Cuando existan, reemplazar este objeto por la respuesta de la API.
+        const resumen = {
+            siniestros: { cantidad: 1, estado: 'En análisis' }
+        };
 
-function pintarResumen() {
-  $('polizas-num').textContent = resumen.polizas.vigentes;
-  $('pago-fecha').textContent = resumen.pago.fecha;
-  $('pago-monto').textContent = '$ ' + resumen.pago.monto.toLocaleString('es-AR');
-  $('siniestros-num').textContent = resumen.siniestros.cantidad;
-  $('siniestros-estado').textContent = resumen.siniestros.estado;
-}
+        function pintarResumen() {
+            $('siniestros-num').textContent = resumen.siniestros.cantidad;
+            $('siniestros-estado').textContent = resumen.siniestros.estado;
+        }
 
-async function cargar() {
-  try {
-    const res = await fetch(API + '/api/portal/me', { headers: { Authorization: 'Bearer ' + token } });
-    if (res.status === 401) return cerrarSesion();
-    if (res.status === 403) return location.replace(PAGINA_PASSWORD); // todavía tiene la contraseña provisoria
-    if (!res.ok) throw new Error();
+        async function cargarProximoPago() {
+            try {
+                const res = await fetch(API + '/api/pagos/proximo', { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 204) { $('pago-fecha').textContent = 'Sin cuotas'; $('pago-monto').textContent = 'Estás al día'; return; }
+                if (!res.ok) return;
+                const p = await res.json();
+                const [y, m, d] = p.vencimiento.split('-');
+                $('pago-fecha').textContent = `${d}/${m}/${y}`;
+                $('pago-monto').textContent = Number(p.monto).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }) + (p.vencida ? ' · Vencida' : '');
+                if (p.vencida) $('pago-monto').style.color = '#b42318';
+            } catch { /* la tarjeta queda con el guion */ }
+        }
 
-    const p = await res.json();
-    $('user-name').textContent = p.nombre;
-    $('saludo-nombre').textContent = p.nombre.split(' ')[0];
-    pintarResumen();
-  } catch {
-    $('user-name').textContent = sessionStorage.getItem('nombre') || '';
-    $('saludo-nombre').textContent = (sessionStorage.getItem('nombre') || '').split(' ')[0];
-    $('error').hidden = false;
-  }
-}
+        async function cargarPolizas() {
+            try {
+                const res = await fetch(API + '/api/polizas', { headers: { Authorization: 'Bearer ' + token } });
+                if (!res.ok) return;
+                const lista = await res.json();
+                $('polizas-num').textContent = lista.filter(p => p.estado === 'Vigente').length;
+            } catch { /* la tarjeta queda con el guion */ }
+        }
 
-if (!token) cerrarSesion(); else cargar();
+        async function cargar() {
+            try {
+                const res = await fetch(API + '/api/portal/me', { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 401) return cerrarSesion();
+                if (res.status === 403) return location.replace(PAGINA_PASSWORD); // todavía tiene la contraseña provisoria
+                if (!res.ok) throw new Error();
 
-$('user-btn').addEventListener('click', e => {
-  e.stopPropagation();
-  const abierto = $('user-menu').hidden;
-  $('user-menu').hidden = !abierto;
-  $('user-btn').setAttribute('aria-expanded', String(abierto));
-});
-document.addEventListener('click', () => { $('user-menu').hidden = true; });
-$('logout').addEventListener('click', cerrarSesion);
+                const p = await res.json();
+                $('user-name').textContent = p.nombre;
+                $('saludo-nombre').textContent = p.nombre.split(' ')[0];
+                pintarResumen();
+                cargarPolizas();
+                cargarProximoPago();
+            } catch {
+                $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+                $('saludo-nombre').textContent = (sessionStorage.getItem('nombre') || '').split(' ')[0];
+                $('error').hidden = false;
+            }
+        }
+
+        if (!token) cerrarSesion(); else cargar();
+
+        $('user-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            const abierto = $('user-menu').hidden;
+            $('user-menu').hidden = !abierto;
+            $('user-btn').setAttribute('aria-expanded', String(abierto));
+        });
+        document.addEventListener('click', () => { $('user-menu').hidden = true; });
+        $('logout').addEventListener('click', cerrarSesion);
     </script>
 </body>
 </html>

@@ -16,6 +16,8 @@ builder.Services.AddDbContext<AppDbContext>(o =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<SolicitudService>();
 builder.Services.AddSingleton<TokenService>();
+builder.Services.AddScoped<IPasarelaPago, PasarelaSimulada>();
+builder.Services.AddScoped<PagosService>();
 
 // El HTML se abre desde el disco (origen "null"), por eso en desarrollo se permite cualquier origen.
 // En producción: .WithOrigins("https://tu-dominio").
@@ -62,5 +64,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapAuthEndpoints();
 app.MapPresupuestoEndpoints();
+app.MapPolizasEndpoints();
+app.MapPagosEndpoints();
 
 app.Run();

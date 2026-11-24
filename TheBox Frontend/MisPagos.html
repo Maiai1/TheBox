@@ -1,0 +1,1000 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Mis pagos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --side: #1f2d3f;
+            --bg: #f1f5fb;
+            --line: #e3e8f0;
+            --green: #22a06b;
+            --red: #b42318
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: .7rem clamp(1rem,2.5vw,3rem) .7rem 1.4rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: .03rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: .5rem;
+            letter-spacing: .1rem;
+            color: var(--navy);
+            margin-top: .22rem;
+            font-weight: 500
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            color: var(--ink);
+            font-size: .88rem;
+            position: relative
+        }
+
+            .user > button {
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer
+            }
+
+        .menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + .5rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1.5rem rgba(30,60,120,.15);
+            min-width: 10rem;
+            overflow: hidden
+        }
+
+            .menu button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                font: inherit;
+                font-size: .85rem;
+                padding: .65rem .9rem;
+                cursor: pointer;
+                color: var(--ink)
+            }
+
+                .menu button:hover {
+                    background: #f3f6fb
+                }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 13rem 1fr;
+            min-height: 0
+        }
+
+        nav {
+            background: var(--side);
+            padding: 1.1rem .8rem;
+            align-self: stretch
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                color: #cfd8e6;
+                text-decoration: none;
+                font-size: .88rem;
+                padding: .7rem .8rem;
+                border-radius: .45rem;
+                margin-bottom: .3rem
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,.07)
+                }
+
+                nav a.active {
+                    background: var(--blue);
+                    color: #fff;
+                    font-weight: 600
+                }
+
+            nav svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                flex: none
+            }
+
+        main {
+            padding: 1.6rem clamp(1rem,2.5vw,3rem) 2rem;
+            min-width: 0
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .lead {
+            font-size: .92rem;
+            color: var(--muted);
+            margin: .2rem 0 1rem
+        }
+
+        .selector {
+            position: relative;
+            max-width: 26rem;
+            margin-bottom: .9rem
+        }
+
+            .selector select {
+                width: 100%;
+                height: 2.8rem;
+                appearance: none;
+                -webkit-appearance: none;
+                border: 1px solid #d5dbe5;
+                border-radius: .55rem;
+                background: #fff;
+                padding: 0 2.4rem 0 .9rem;
+                font: inherit;
+                font-size: .92rem;
+                color: var(--ink);
+                cursor: pointer;
+                outline: none
+            }
+
+                .selector select:focus {
+                    border-color: var(--blue);
+                    box-shadow: 0 0 0 .18rem rgba(37,99,235,.15)
+                }
+
+            .selector svg {
+                position: absolute;
+                right: .85rem;
+                top: 50%;
+                transform: translateY(-50%);
+                width: .9rem;
+                height: .9rem;
+                pointer-events: none
+            }
+
+        .estado-poliza {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .88rem;
+            margin-bottom: .8rem;
+            flex-wrap: wrap
+        }
+
+        .aviso {
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .86rem;
+            margin-bottom: .9rem;
+            line-height: 1.45
+        }
+
+            .aviso.mora {
+                background: #fff4d6;
+                border: 1px solid #f1dca0;
+                color: #7a5200
+            }
+
+            .aviso.error {
+                background: #fdecec;
+                border: 1px solid #f5c2c0;
+                color: var(--red)
+            }
+
+        .tabla-wrap {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .7rem;
+            overflow-x: auto;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 36rem
+        }
+
+        th {
+            background: #f6f8fc;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: .84rem;
+            text-align: center;
+            padding: .8rem .8rem;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap
+        }
+
+        td {
+            padding: .7rem .8rem;
+            font-size: .9rem;
+            color: var(--ink);
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+            text-align: center
+        }
+
+        tr:last-child td {
+            border-bottom: 0
+        }
+
+        tbody tr:hover {
+            background: #fafcff
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: .8rem;
+            font-weight: 500;
+            padding: .3rem .85rem;
+            border-radius: .45rem;
+            border: 1px solid transparent;
+            min-width: 5.2rem
+        }
+
+            .badge.pagada, .badge.vigente {
+                background: #dff3e6;
+                color: #1f7a46;
+                border-color: #bfe3cc
+            }
+
+            .badge.pendiente, .badge.suspendida {
+                background: #fff0d2;
+                color: #9a6200;
+                border-color: #f3dcab
+            }
+
+            .badge.vencida, .badge.cancelada {
+                background: #fddede;
+                color: var(--red);
+                border-color: #f3baba
+            }
+
+        .btn {
+            border: 0;
+            border-radius: .5rem;
+            background: var(--blue);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: .88rem;
+            padding: .55rem 1.1rem;
+            cursor: pointer
+        }
+
+            .btn:hover {
+                background: var(--blue-dark)
+            }
+
+            .btn:disabled {
+                opacity: .6;
+                cursor: default
+            }
+
+            .btn.ghost {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid #d5dbe5
+            }
+
+                .btn.ghost:hover {
+                    background: #f3f6fb
+                }
+
+            .btn.pagar {
+                min-width: 5.6rem
+            }
+
+        .desc {
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: var(--blue);
+            padding: .35rem;
+            border-radius: .45rem;
+            background: #eaf1fe
+        }
+
+            .desc:hover {
+                background: #dbe7fb
+            }
+
+            .desc svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                display: block
+            }
+
+        .vacio {
+            padding: 2rem 1rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: .92rem
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,.55);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            z-index: 20
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: .9rem;
+            width: 100%;
+            max-width: 27rem;
+            padding: 1.3rem 1.4rem 1.4rem;
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.28)
+        }
+
+            .modal h3 {
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: var(--navy)
+            }
+
+            .modal .tag {
+                display: inline-block;
+                font-size: .72rem;
+                font-weight: 600;
+                color: #1d4f9f;
+                background: #dbe8fb;
+                border-radius: 999px;
+                padding: .2rem .6rem;
+                margin: .35rem 0 .9rem
+            }
+
+        .resumen {
+            background: #f3f6fb;
+            border: 1px solid var(--line);
+            border-radius: .6rem;
+            padding: .8rem 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .5rem 1rem;
+            margin-bottom: 1rem
+        }
+
+            .resumen dt {
+                font-size: .74rem;
+                color: var(--muted)
+            }
+
+            .resumen dd {
+                font-size: .9rem;
+                color: var(--ink);
+                font-weight: 600
+            }
+
+            .resumen .total {
+                grid-column: 1/-1;
+                border-top: 1px solid var(--line);
+                padding-top: .5rem
+            }
+
+                .resumen .total dd {
+                    font-size: 1.2rem;
+                    color: var(--navy)
+                }
+
+        .sec-titulo {
+            font-size: .84rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: .5rem
+        }
+
+        .medios {
+            display: grid;
+            gap: .5rem;
+            margin-bottom: 1.1rem
+        }
+
+        .medio {
+            display: flex;
+            align-items: center;
+            gap: .7rem;
+            border: 1.5px solid #d9dfe9;
+            border-radius: .6rem;
+            padding: .7rem .85rem;
+            cursor: pointer;
+            font-size: .9rem;
+            color: var(--ink);
+            font-weight: 500;
+            margin: 0
+        }
+
+            .medio:hover {
+                background: #f7faff
+            }
+
+            .medio:has(input:checked) {
+                border-color: var(--blue);
+                background: #f1f6ff
+            }
+
+            .medio input {
+                accent-color: var(--blue);
+                width: 1.05rem;
+                height: 1.05rem
+            }
+
+            .medio svg {
+                width: 1.4rem;
+                height: 1.4rem;
+                flex: none;
+                color: #4b5563
+            }
+
+        .acciones {
+            display: flex;
+            gap: .6rem;
+            justify-content: flex-end
+        }
+
+        .resultado {
+            text-align: center;
+            padding: .4rem 0 1rem
+        }
+
+            .resultado .icono {
+                width: 4rem;
+                height: 4rem;
+                border-radius: 50%;
+                display: grid;
+                place-items: center;
+                margin: 0 auto .9rem
+            }
+
+                .resultado .icono svg {
+                    width: 2rem;
+                    height: 2rem
+                }
+
+            .resultado.ok .icono {
+                background: var(--green)
+            }
+
+            .resultado.error .icono {
+                background: var(--red)
+            }
+
+            .resultado.espera .icono {
+                background: #e0a100
+            }
+
+            .resultado h4 {
+                font-size: 1.4rem;
+                font-weight: 800;
+                margin-bottom: .4rem
+            }
+
+            .resultado.ok h4 {
+                color: #1f7a46
+            }
+
+            .resultado.error h4 {
+                color: var(--red)
+            }
+
+            .resultado.espera h4 {
+                color: #9a6200
+            }
+
+            .resultado p {
+                font-size: .9rem;
+                line-height: 1.5;
+                margin: 0 auto;
+                max-width: 22rem
+            }
+
+            .resultado .ref {
+                font-size: .78rem;
+                color: var(--muted);
+                margin-top: .6rem
+            }
+
+        .nota-test {
+            font-size: .74rem;
+            color: var(--muted);
+            margin-top: .8rem;
+            text-align: center
+        }
+
+        @media (max-width:800px) {
+            html {
+                font-size: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                padding: .5rem
+            }
+
+                nav a {
+                    white-space: nowrap;
+                    margin: 0 .25rem 0 0
+                }
+
+            main {
+                padding: 1.2rem 1rem
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.6rem;height:2.6rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div><div class="brand-name">THE BOX</div><div class="brand-sub">GESTIÓN DE SEGUROS</div></div>
+        </div>
+        <div class="user">
+            <svg style="width:1.2rem;height:1.2rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>
+            <button type="button" id="user-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="user-name"></span>
+                <svg style="width:.8rem;height:.8rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div class="menu" id="user-menu" hidden><button type="button" id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Menú principal">
+            <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
+            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
+            <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
+        </nav>
+
+        <main>
+            <h1>Mis pagos</h1>
+            <p class="lead">Consultá el estado de tus cuotas.</p>
+
+            <div class="aviso error" id="error" role="alert" hidden></div>
+
+            <div class="selector" id="selector" hidden>
+                <select id="poliza" aria-label="Póliza"></select>
+                <svg viewBox="0 0 24 24" fill="none" stroke="#4b5563" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </div>
+
+            <div class="estado-poliza" id="estado-poliza" hidden>
+                <span>Estado de la póliza:</span><span class="badge" id="estado-poliza-badge"></span>
+            </div>
+            <div class="aviso mora" id="aviso-mora" role="status" hidden></div>
+
+            <div class="tabla-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Cuota</th><th>Vencimiento</th><th>Monto</th><th>Estado</th><th>Comprobante</th></tr>
+                    </thead>
+                    <tbody id="filas"></tbody>
+                </table>
+                <p class="vacio" id="estado-tabla">Cargando tus cuotas…</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Pantalla de pago (pasarela simulada) -->
+    <div class="overlay" id="overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+            <h3 id="modal-titulo">Pagar cuota</h3>
+            <span class="tag">Pasarela de pago · entorno de prueba</span>
+
+            <div id="vista-pago">
+                <dl class="resumen">
+                    <div><dt>Póliza</dt><dd id="r-poliza"></dd></div>
+                    <div><dt>Cuota</dt><dd id="r-cuota"></dd></div>
+                    <div><dt>Vencimiento</dt><dd id="r-venc"></dd></div>
+                    <div><dt>Estado</dt><dd id="r-estado"></dd></div>
+                    <div class="total"><dt>Total a pagar</dt><dd id="r-monto"></dd></div>
+                </dl>
+                <p class="sec-titulo">Elegí el medio de pago</p>
+                <div class="medios" id="medios"></div>
+                <p class="aviso error" id="modal-error" role="alert" hidden></p>
+            </div>
+
+            <div id="vista-resultado" hidden>
+                <div class="resultado" id="resultado">
+                    <div class="icono" id="resultado-icono"></div>
+                    <h4 id="resultado-titulo"></h4>
+                    <p id="resultado-mensaje"></p>
+                    <p class="ref" id="resultado-ref"></p>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="button" class="btn ghost" id="btn-cancelar">Cancelar</button>
+                <button type="button" class="btn ghost" id="btn-reintentar" hidden>Reintentar</button>
+                <button type="button" class="btn" id="btn-aceptar">Aceptar</button>
+                <button type="button" class="btn" id="btn-cerrar" hidden>Cerrar</button>
+            </div>
+            <p class="nota-test">Simulación: la pasarela real se integrará más adelante. No se ingresan ni se guardan datos de tarjeta.</p>
+        </div>
+    </div>
+
+    <script>
+const API = 'http://localhost:5080';
+const PAGINA_LOGIN = 'LogIn.html';
+const PAGINA_PASSWORD = 'Password.html';
+
+const $ = id => document.getElementById(id);
+const token = sessionStorage.getItem('token');
+let polizas = [];
+let cuotas = [];
+let polizaActual = null;   // respuesta de /cuotas (estado de la póliza, mora, cuotas)
+let cuotaEnPago = null;
+let huboIntento = false;
+
+function cerrarSesion() { sessionStorage.clear(); location.replace(PAGINA_LOGIN); }
+
+// 401 -> login, 403 -> todavía tiene la contraseña provisoria.
+async function llamar(ruta, opciones = {}) {
+  const res = await fetch(API + ruta, {
+    ...opciones,
+    headers: { Authorization: 'Bearer ' + token, ...(opciones.body ? { 'Content-Type': 'application/json' } : {}) }
+  });
+  if (res.status === 401) { cerrarSesion(); return null; }
+  if (res.status === 403) { location.replace(PAGINA_PASSWORD); return null; }
+  return res;
+}
+
+const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
+const fmtMoneda = n => Number(n).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+const clase = e => String(e).toLowerCase();
+const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+const ICONO = {
+  descarga: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
+  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>',
+  error: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  espera: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  tarjeta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg>',
+  efectivo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>'
+};
+
+/* ---------- Carga ---------- */
+async function iniciar() {
+  try {
+    const [rPerfil, rPolizas] = await Promise.all([llamar('/api/portal/me'), llamar('/api/polizas')]);
+    if (!rPerfil || !rPolizas) return;
+    if (!rPerfil.ok || !rPolizas.ok) throw new Error();
+
+    $('user-name').textContent = (await rPerfil.json()).nombre;
+    polizas = await rPolizas.json();
+
+    if (!polizas.length) {
+      $('estado-tabla').textContent = 'Todavía no tenés pólizas registradas.';
+      return;
+    }
+
+    $('poliza').replaceChildren(...polizas.map(p => {
+      const o = document.createElement('option');
+      o.value = p.id;
+      o.textContent = `Póliza: ${p.numero} - ${p.vehiculo}`;
+      return o;
+    }));
+    $('selector').hidden = false;
+    await cargarCuotas();
+  } catch {
+    $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+    mostrarError('No pudimos cargar tus pagos. Probá de nuevo en unos minutos.');
+  }
+}
+
+function mostrarError(msg) {
+  $('estado-tabla').hidden = true;
+  $('error').textContent = msg;
+  $('error').hidden = false;
+}
+
+async function cargarCuotas() {
+  $('error').hidden = true;
+  $('estado-tabla').hidden = false;
+  $('estado-tabla').textContent = 'Cargando tus cuotas…';
+  $('filas').replaceChildren();
+  try {
+    const res = await llamar(`/api/polizas/${$('poliza').value}/cuotas`);
+    if (!res) return;
+    if (!res.ok) throw new Error();
+    polizaActual = await res.json();
+    cuotas = polizaActual.cuotas;
+    pintarEstadoPoliza();
+    pintarCuotas();
+  } catch {
+    mostrarError('No pudimos cargar las cuotas de la póliza.');
+  }
+}
+
+$('poliza').addEventListener('change', cargarCuotas);
+
+function pintarEstadoPoliza() {
+  const p = polizaActual;
+  $('estado-poliza').hidden = false;
+  $('estado-poliza-badge').textContent = p.estadoPoliza;
+  $('estado-poliza-badge').className = 'badge ' + clase(p.estadoPoliza);
+
+  let aviso = '';
+  if (p.estadoPoliza === 'Cancelada') aviso = 'Esta póliza está cancelada y no admite pagos. Comunicate con atención al cliente.';
+  else if (p.estadoPoliza === 'Suspendida' && p.enMora) aviso = 'Tu póliza está suspendida por falta de pago. Al abonar las cuotas vencidas se reactiva automáticamente.';
+  else if (p.enMora) aviso = 'Tenés cuotas vencidas. Abonalas para evitar la suspensión de tu póliza.';
+  $('aviso-mora').textContent = aviso;
+  $('aviso-mora').hidden = !aviso;
+}
+
+function celda(texto) { const td = document.createElement('td'); td.textContent = texto; return td; }
+
+function pintarCuotas() {
+  $('filas').replaceChildren(...cuotas.map(c => {
+    const tr = document.createElement('tr');
+
+    const tdEstado = document.createElement('td');
+    const badge = document.createElement('span');
+    badge.className = 'badge ' + clase(c.estado);
+    badge.textContent = c.estado;
+    tdEstado.append(badge);
+
+    const tdAccion = document.createElement('td');
+    if (c.pagable) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'btn pagar'; b.textContent = 'Pagar';
+      b.setAttribute('aria-label', `Pagar la cuota ${c.numero}`);
+      b.addEventListener('click', () => abrirPago(c));
+      tdAccion.append(b);
+    } else if (c.pagoId) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'desc'; b.innerHTML = ICONO.descarga;
+      b.setAttribute('aria-label', `Descargar el comprobante de la cuota ${c.numero}`);
+      b.addEventListener('click', () => descargarComprobante(c.pagoId, b));
+      tdAccion.append(b);
+    }
+
+    tr.append(celda(c.numero), celda(fmtFecha(c.vencimiento)), celda(fmtMoneda(c.monto)), tdEstado, tdAccion);
+    return tr;
+  }));
+
+  $('estado-tabla').hidden = cuotas.length > 0;
+  if (!cuotas.length) $('estado-tabla').textContent = 'Esta póliza no tiene cuotas registradas.';
+}
+
+/* ---------- Pantalla de pago ---------- */
+function vistaSeleccion() {
+  $('vista-pago').hidden = false;
+  $('vista-resultado').hidden = true;
+  $('btn-cancelar').hidden = false;
+  $('btn-aceptar').hidden = false;
+  $('btn-aceptar').disabled = false;
+  $('btn-aceptar').textContent = 'Aceptar';
+  $('btn-reintentar').hidden = true;
+  $('btn-cerrar').hidden = true;
+  $('modal-error').hidden = true;
+}
+
+async function abrirPago(c) {
+  cuotaEnPago = c;
+  huboIntento = false;
+  $('modal-titulo').textContent = `Pagar cuota ${c.numero}`;
+  $('r-poliza').textContent = polizaActual.numero;
+  $('r-cuota').textContent = `${c.numero} de ${cuotas.length}`;
+  $('r-venc').textContent = fmtFecha(c.vencimiento);
+  $('r-estado').textContent = c.estado;
+  $('r-monto').textContent = fmtMoneda(c.monto);
+  vistaSeleccion();
+  $('medios').replaceChildren();
+  $('overlay').hidden = false;
+
+  try {
+    const res = await llamar('/api/pagos/medios');
+    if (!res) return;
+    if (!res.ok) throw new Error();
+    const medios = await res.json();
+    $('medios').replaceChildren(...medios.map((m, i) => {
+      const l = document.createElement('label'); l.className = 'medio';
+      const r = document.createElement('input'); r.type = 'radio'; r.name = 'medio'; r.value = m.id; r.checked = i === 0;
+      const ic = document.createElement('span'); ic.innerHTML = m.id === 'pagofacil' ? ICONO.efectivo : ICONO.tarjeta;
+      const t = document.createElement('span'); t.textContent = m.descripcion;
+      l.append(r, ic, t);
+      return l;
+    }));
+  } catch {
+    $('modal-error').textContent = 'No pudimos cargar los medios de pago.';
+    $('modal-error').hidden = false;
+    $('btn-aceptar').disabled = true;
+  }
+}
+
+$('btn-aceptar').addEventListener('click', async () => {
+  const medio = document.querySelector('input[name="medio"]:checked');
+  if (!medio) { $('modal-error').textContent = 'Elegí un medio de pago.'; $('modal-error').hidden = false; return; }
+
+  $('modal-error').hidden = true;
+  $('btn-aceptar').disabled = true;
+  $('btn-aceptar').textContent = 'Procesando…';
+  await new Promise(r => setTimeout(r, 900)); // simula la espera de la pasarela
+
+  try {
+    const res = await llamar(`/api/cuotas/${cuotaEnPago.id}/pagos`, { method: 'POST', body: JSON.stringify({ medioPagoId: medio.value }) });
+    if (!res) return;
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      $('modal-error').textContent = (data.errores || ['No pudimos procesar el pago.']).join(' ');
+      $('modal-error').hidden = false;
+      $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
+      return;
+    }
+    huboIntento = true;
+    mostrarResultado(data);
+  } catch {
+    $('modal-error').textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
+    $('modal-error').hidden = false;
+    $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
+  }
+});
+
+function mostrarResultado(r) {
+  const tipo = { Aprobado: 'ok', Rechazado: 'error', Pendiente: 'espera' }[r.estado];
+  const titulo = { Aprobado: '¡Pagado!', Rechazado: 'Pago rechazado', Pendiente: 'Pago pendiente' }[r.estado];
+
+  $('resultado').className = 'resultado ' + tipo;
+  $('resultado-icono').innerHTML = ICONO[tipo];
+  $('resultado-titulo').textContent = titulo;
+  let mensaje = r.mensaje;
+  if (r.estado === 'Aprobado' && r.comprobante) mensaje += ` Comprobante ${r.comprobante}.`;
+  if (r.estado !== 'Aprobado') mensaje += ' La cuota sigue pendiente de pago.';
+  $('resultado-mensaje').textContent = mensaje;
+  $('resultado-ref').textContent = 'Referencia: ' + r.referencia;
+
+  $('vista-pago').hidden = true;
+  $('vista-resultado').hidden = false;
+  $('btn-cancelar').hidden = true;
+  $('btn-aceptar').hidden = true;
+  $('btn-cerrar').hidden = false;
+  $('btn-reintentar').hidden = r.estado !== 'Rechazado';
+  $('btn-cerrar').focus();
+}
+
+$('btn-reintentar').addEventListener('click', vistaSeleccion);
+
+async function cerrarPago() {
+  $('overlay').hidden = true;
+  if (huboIntento) { huboIntento = false; await cargarCuotas(); } // refleja el nuevo estado de cuota y póliza
+}
+$('btn-cerrar').addEventListener('click', cerrarPago);
+$('btn-cancelar').addEventListener('click', cerrarPago);
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarPago(); });
+
+
+        async function descargarComprobante(pagoId, boton) {
+            const w = window.open('', '_blank');      // se abre en el clic, antes del fetch
+            boton.disabled = true;
+            try {
+                const res = await llamar(`/api/pagos/${pagoId}/comprobante`);
+                if (!res || !res.ok) throw new Error();
+                w.document.write(comprobanteHtml(await res.json()));
+                w.document.close();
+                w.onload = () => w.print();
+            } catch {
+                w.close();
+                mostrarError('No pudimos abrir el comprobante. Probá de nuevo en unos minutos.');
+            } finally {
+                boton.disabled = false;
+            }
+        }
+
+function comprobanteHtml(c) {
+  const f = c.fecha;
+  const fecha = new Date(/(Z|[+-]\d\d:\d\d)$/.test(f) ? f : f + 'Z').toLocaleString('es-AR');
+  const fila = (k, v) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`;
+  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Comprobante ${esc(c.numero)}</title>
+<style>body{font-family:Arial,sans-serif;color:#111827;max-width:34rem;margin:2rem auto;padding:0 1rem}
+h1{color:#16325c;margin-bottom:.2rem}.sub{color:#6b7280;margin-bottom:1.5rem}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.55rem .4rem;border-bottom:1px solid #e3e8f0}
+th{color:#6b7280;font-weight:500;width:40%}.total td{font-size:1.2rem;font-weight:700}
+.ok{display:inline-block;background:#dff3e6;color:#1f7a46;padding:.25rem .7rem;border-radius:.4rem;font-weight:600;margin-bottom:1rem}</style></head>
+<body><h1>THE BOX · Gestión de Seguros</h1><p class="sub">Comprobante de pago</p><span class="ok">Pago aprobado</span>
+<table>${fila('N.º de comprobante', c.numero)}${fila('Fecha', fecha)}${fila('Asegurado', c.asegurado)}${fila('DNI', c.dni)}
+${fila('Póliza', c.poliza)}${fila('Vehículo', c.vehiculo)}${fila('Cuota', c.cuota)}${fila('Vencimiento', fmtFecha(c.vencimiento))}
+${fila('Medio de pago', c.medioPago)}${fila('Referencia', c.referencia)}
+<tr class="total"><th>Importe</th><td>${esc(fmtMoneda(c.monto))}</td></tr></table></body></html>`;
+}
+
+/* ---------- Menú de usuario ---------- */
+$('user-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  const abierto = $('user-menu').hidden;
+  $('user-menu').hidden = !abierto;
+  $('user-btn').setAttribute('aria-expanded', String(abierto));
+});
+document.addEventListener('click', () => { $('user-menu').hidden = true; });
+$('logout').addEventListener('click', cerrarSesion);
+
+if (!token) cerrarSesion(); else iniciar();
+    </script>
+</body>
+</html>

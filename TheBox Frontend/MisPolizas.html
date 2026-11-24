@@ -1,0 +1,676 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Mis pólizas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --side: #1f2d3f;
+            --bg: #f1f5fb;
+            --line: #e3e8f0
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: .7rem clamp(1rem,2.5vw,3rem) .7rem 1.4rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: .03rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: .5rem;
+            letter-spacing: .1rem;
+            color: var(--navy);
+            margin-top: .22rem;
+            font-weight: 500
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            color: var(--ink);
+            font-size: .88rem;
+            position: relative
+        }
+
+            .user > button {
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer
+            }
+
+        .menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + .5rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1.5rem rgba(30,60,120,.15);
+            min-width: 10rem;
+            overflow: hidden
+        }
+
+            .menu button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                font: inherit;
+                font-size: .85rem;
+                padding: .65rem .9rem;
+                cursor: pointer;
+                color: var(--ink)
+            }
+
+                .menu button:hover {
+                    background: #f3f6fb
+                }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 13rem 1fr;
+            min-height: 0
+        }
+
+        nav {
+            background: var(--side);
+            padding: 1.1rem .8rem;
+            align-self: stretch
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                color: #cfd8e6;
+                text-decoration: none;
+                font-size: .88rem;
+                padding: .7rem .8rem;
+                border-radius: .45rem;
+                margin-bottom: .3rem
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,.07)
+                }
+
+                nav a.active {
+                    background: var(--blue);
+                    color: #fff;
+                    font-weight: 600
+                }
+
+            nav svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                flex: none
+            }
+
+        main {
+            padding: 1.6rem clamp(1rem,2.5vw,3rem) 2rem;
+            min-width: 0
+        }
+
+        .titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.1rem
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .lead {
+            font-size: .92rem;
+            color: var(--muted);
+            margin-top: .2rem
+        }
+
+        .btn-out {
+            display: inline-flex;
+            align-items: center;
+            gap: .5rem;
+            background: #fff;
+            color: var(--blue-dark);
+            border: 1.5px solid var(--blue);
+            border-radius: .55rem;
+            font: inherit;
+            font-weight: 600;
+            font-size: .88rem;
+            padding: .6rem 1.1rem;
+            cursor: pointer
+        }
+
+            .btn-out:hover {
+                background: #f1f6ff
+            }
+
+            .btn-out:disabled {
+                opacity: .5;
+                cursor: default
+            }
+
+            .btn-out svg {
+                width: 1.1rem;
+                height: 1.1rem
+            }
+
+        .error {
+            background: #fdecec;
+            border: 1px solid #f5c2c0;
+            color: #b42318;
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .88rem;
+            margin-bottom: 1rem
+        }
+
+        .tabla-wrap {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .7rem;
+            overflow-x: auto;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 44rem
+        }
+
+        th {
+            background: #f6f8fc;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: .82rem;
+            text-align: left;
+            padding: .8rem 1rem;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap
+        }
+
+        td {
+            padding: .95rem 1rem;
+            font-size: .88rem;
+            color: var(--ink);
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle
+        }
+
+        tr:last-child td {
+            border-bottom: 0
+        }
+
+        tbody tr:hover {
+            background: #fafcff
+        }
+
+        td.num {
+            font-weight: 600
+        }
+
+        td.vig div {
+            white-space: nowrap
+        }
+
+        th.acc, td.acc {
+            text-align: center;
+            width: 5rem
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: .8rem;
+            font-weight: 500;
+            padding: .3rem .8rem;
+            border-radius: .45rem;
+            border: 1px solid transparent
+        }
+
+            .badge.vigente {
+                background: #dff3e6;
+                color: #1f7a46;
+                border-color: #bfe3cc
+            }
+
+            .badge.suspendida {
+                background: #fff0d2;
+                color: #9a6200;
+                border-color: #f3dcab
+            }
+
+            .badge.cancelada {
+                background: #fddede;
+                color: #b42318;
+                border-color: #f3baba
+            }
+
+        .ver {
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: var(--blue);
+            padding: .3rem;
+            border-radius: .4rem
+        }
+
+            .ver:hover {
+                background: #eaf1fe
+            }
+
+            .ver svg {
+                width: 1.3rem;
+                height: 1.3rem;
+                display: block
+            }
+
+        .vacio {
+            padding: 2.2rem 1rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: .92rem
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,.5);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            z-index: 20
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: .9rem;
+            width: 100%;
+            max-width: 26rem;
+            padding: 1.3rem 1.4rem 1.4rem;
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.25)
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: 1rem
+        }
+
+        .modal h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .cerrar {
+            background: none;
+            border: 0;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: var(--muted);
+            cursor: pointer;
+            padding: .1rem .4rem;
+            border-radius: .4rem
+        }
+
+            .cerrar:hover {
+                background: #f1f4f9
+            }
+
+        .detalle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .9rem 1rem
+        }
+
+            .detalle dt {
+                font-size: .78rem;
+                color: var(--muted);
+                margin-bottom: .15rem
+            }
+
+            .detalle dd {
+                font-size: .92rem;
+                color: var(--ink);
+                font-weight: 500
+            }
+
+            .detalle .ancho {
+                grid-column: 1/-1
+            }
+
+        .modal-msg {
+            font-size: .9rem;
+            color: var(--muted);
+            padding: 1rem 0;
+            text-align: center
+        }
+
+        @media (max-width:800px) {
+            html {
+                font-size: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                padding: .5rem
+            }
+
+                nav a {
+                    white-space: nowrap;
+                    margin: 0 .25rem 0 0
+                }
+
+            main {
+                padding: 1.2rem 1rem
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.6rem;height:2.6rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div><div class="brand-name">THE BOX</div><div class="brand-sub">GESTIÓN DE SEGUROS</div></div>
+        </div>
+        <div class="user">
+            <svg style="width:1.2rem;height:1.2rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>
+            <button type="button" id="user-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="user-name"></span>
+                <svg style="width:.8rem;height:.8rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div class="menu" id="user-menu" hidden><button type="button" id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Menú principal">
+            <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
+            <a href="MisPolizas.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
+            <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
+        </nav>
+
+        <main>
+            <div class="titulo">
+                <div>
+                    <h1>Mis pólizas</h1>
+                    <p class="lead">Conocé el estado y la información de todas tus pólizas.</p>
+                </div>
+                <button class="btn-out" type="button" id="descargar" disabled>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14" /></svg>
+                    Descargar resumen
+                </button>
+            </div>
+
+            <div class="error" id="error" role="alert" hidden></div>
+
+            <div class="tabla-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>N.º Póliza</th>
+                            <th>Vehículo</th>
+                            <th>Tipo de seguro</th>
+                            <th>Estado</th>
+                            <th>Vigencia</th>
+                            <th class="acc">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="filas"></tbody>
+                </table>
+                <p class="vacio" id="estado-tabla">Cargando tus pólizas…</p>
+            </div>
+        </main>
+    </div>
+
+    <div class="overlay" id="overlay" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+            <div class="modal-head">
+                <h3 id="modal-titulo">Detalle de la póliza</h3>
+                <button type="button" class="cerrar" id="cerrar" aria-label="Cerrar">×</button>
+            </div>
+            <p class="modal-msg" id="modal-msg" hidden></p>
+            <dl class="detalle" id="detalle" hidden>
+                <div><dt>N.º de póliza</dt><dd id="d-numero"></dd></div>
+                <div><dt>Estado</dt><dd><span class="badge" id="d-estado"></span></dd></div>
+                <div class="ancho"><dt>Vehículo</dt><dd id="d-vehiculo"></dd></div>
+                <div><dt>Patente</dt><dd id="d-patente"></dd></div>
+                <div><dt>Tipo de seguro</dt><dd id="d-tipo"></dd></div>
+                <div><dt>Vigencia desde</dt><dd id="d-desde"></dd></div>
+                <div><dt>Vigencia hasta</dt><dd id="d-hasta"></dd></div>
+                <div class="ancho"><dt>Prima mensual</dt><dd id="d-prima"></dd></div>
+            </dl>
+        </div>
+    </div>
+
+    <script>
+        const API = 'http://localhost:5080';
+        const PAGINA_LOGIN = 'LogIn.html';
+        const PAGINA_PASSWORD = 'Password.html';
+
+        const $ = id => document.getElementById(id);
+        const token = sessionStorage.getItem('token');
+        let polizas = [];
+
+        function cerrarSesion() {
+            sessionStorage.clear();
+            location.replace(PAGINA_LOGIN);
+        }
+
+        // Llamada autenticada: 401 -> login, 403 -> todavía tiene la contraseña provisoria.
+        async function pedir(ruta) {
+            const res = await fetch(API + ruta, { headers: { Authorization: 'Bearer ' + token } });
+            if (res.status === 401) { cerrarSesion(); return null; }
+            if (res.status === 403) { location.replace(PAGINA_PASSWORD); return null; }
+            return res;
+        }
+
+        const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
+        const fmtMoneda = n => Number(n).toLocaleString('es-AR', { style: 'currency', currency: 'ARS' });
+        const claseEstado = e => ({ Vigente: 'vigente', Suspendida: 'suspendida', Cancelada: 'cancelada' })[e] || '';
+
+        function celda(texto, clase) {
+            const td = document.createElement('td');
+            if (clase) td.className = clase;
+            td.textContent = texto;
+            return td;
+        }
+
+        function pintarTabla() {
+            $('filas').replaceChildren(...polizas.map(p => {
+                const tr = document.createElement('tr');
+
+                const tdEstado = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = 'badge ' + claseEstado(p.estado);
+                badge.textContent = p.estado;
+                tdEstado.append(badge);
+
+                const tdVig = document.createElement('td');
+                tdVig.className = 'vig';
+                for (const f of [p.vigenciaDesde, p.vigenciaHasta]) {
+                    const d = document.createElement('div'); d.textContent = fmtFecha(f); tdVig.append(d);
+                }
+
+                const tdAcc = document.createElement('td');
+                tdAcc.className = 'acc';
+                const ver = document.createElement('button');
+                ver.type = 'button'; ver.className = 'ver';
+                ver.setAttribute('aria-label', 'Ver detalle de la póliza ' + p.numero);
+                ver.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+                ver.addEventListener('click', () => abrirDetalle(p.id));
+                tdAcc.append(ver);
+
+                tr.append(celda(p.numero, 'num'), celda(p.vehiculo), celda(p.tipoSeguro), tdEstado, tdVig, tdAcc);
+                return tr;
+            }));
+
+            const hay = polizas.length > 0;
+            $('estado-tabla').hidden = hay;
+            if (!hay) $('estado-tabla').textContent = 'Todavía no tenés pólizas registradas.';
+            $('descargar').disabled = !hay;
+        }
+
+        async function cargar() {
+            try {
+                const [rPerfil, rPolizas] = await Promise.all([pedir('/api/portal/me'), pedir('/api/polizas')]);
+                if (!rPerfil || !rPolizas) return; // ya se redirigió
+                if (!rPerfil.ok || !rPolizas.ok) throw new Error();
+
+                $('user-name').textContent = (await rPerfil.json()).nombre;
+                polizas = await rPolizas.json();
+                pintarTabla();
+            } catch {
+                $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+                $('estado-tabla').hidden = true;
+                $('error').textContent = 'No pudimos cargar tus pólizas. Probá de nuevo en unos minutos.';
+                $('error').hidden = false;
+            }
+        }
+
+        if (!token) cerrarSesion(); else cargar();
+
+        /* ---------- Detalle ---------- */
+        async function abrirDetalle(id) {
+            $('detalle').hidden = true;
+            $('modal-msg').textContent = 'Cargando…';
+            $('modal-msg').hidden = false;
+            $('overlay').hidden = false;
+            $('cerrar').focus();
+            try {
+                const res = await pedir('/api/polizas/' + id);
+                if (!res) return;
+                if (!res.ok) throw new Error();
+                const p = await res.json();
+
+                $('d-numero').textContent = p.numero;
+                $('d-estado').textContent = p.estado;
+                $('d-estado').className = 'badge ' + claseEstado(p.estado);
+                $('d-vehiculo').textContent = `${p.marca} ${p.modelo} ${p.anio}`;
+                $('d-patente').textContent = p.patente;
+                $('d-tipo').textContent = p.tipoSeguro;
+                $('d-desde').textContent = fmtFecha(p.vigenciaDesde);
+                $('d-hasta').textContent = fmtFecha(p.vigenciaHasta);
+                $('d-prima').textContent = fmtMoneda(p.primaMensual);
+                $('modal-msg').hidden = true;
+                $('detalle').hidden = false;
+            } catch {
+                $('modal-msg').textContent = 'No pudimos cargar el detalle de la póliza.';
+            }
+        }
+
+        const cerrarDetalle = () => { $('overlay').hidden = true; };
+        $('cerrar').addEventListener('click', cerrarDetalle);
+        $('overlay').addEventListener('click', e => { if (e.target === $('overlay')) cerrarDetalle(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarDetalle(); });
+
+        /* ---------- Descargar resumen (CSV, se abre en Excel) ---------- */
+        $('descargar').addEventListener('click', () => {
+            if (!polizas.length) return;
+            const esc = v => '"' + String(v).replace(/"/g, '""') + '"';
+            const filas = [
+                ['N.º de póliza', 'Vehículo', 'Tipo de seguro', 'Estado', 'Vigencia desde', 'Vigencia hasta'],
+                ...polizas.map(p => [p.numero, p.vehiculo, p.tipoSeguro, p.estado, fmtFecha(p.vigenciaDesde), fmtFecha(p.vigenciaHasta)])
+            ];
+            const csv = '\ufeff' + filas.map(f => f.map(esc).join(';')).join('\r\n');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+            a.download = 'resumen-polizas-' + new Date().toISOString().slice(0, 10) + '.csv';
+            document.body.append(a); a.click(); a.remove();
+            setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+        });
+
+        /* ---------- Menú de usuario ---------- */
+        $('user-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            const abierto = $('user-menu').hidden;
+            $('user-menu').hidden = !abierto;
+            $('user-btn').setAttribute('aria-expanded', String(abierto));
+        });
+        document.addEventListener('click', () => { $('user-menu').hidden = true; });
+        $('logout').addEventListener('click', cerrarSesion);
+    </script>
+</body>
+</html>

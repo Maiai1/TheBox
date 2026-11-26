@@ -1,0 +1,516 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Inicio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --side: #1f2d3f;
+            --bg: #f1f5fb;
+            --line: #e3e8f0;
+            --soft: #e8f0fc
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: .7rem clamp(1rem,2.5vw,3rem) .7rem 1.4rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: .03rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: .5rem;
+            letter-spacing: .1rem;
+            color: var(--navy);
+            margin-top: .22rem;
+            font-weight: 500
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            color: var(--ink);
+            font-size: .88rem;
+            position: relative
+        }
+
+            .user > button {
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer
+            }
+
+        .menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + .5rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1.5rem rgba(30,60,120,.15);
+            min-width: 10rem;
+            overflow: hidden
+        }
+
+            .menu button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                font: inherit;
+                font-size: .85rem;
+                padding: .65rem .9rem;
+                cursor: pointer;
+                color: var(--ink)
+            }
+
+                .menu button:hover {
+                    background: #f3f6fb
+                }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 13rem 1fr;
+            min-height: 0
+        }
+
+        nav {
+            background: var(--side);
+            padding: 1.1rem .8rem;
+            align-self: stretch
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                color: #cfd8e6;
+                text-decoration: none;
+                font-size: .88rem;
+                padding: .7rem .8rem;
+                border-radius: .45rem;
+                margin-bottom: .3rem
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,.07)
+                }
+
+                nav a.active {
+                    background: var(--blue);
+                    color: #fff;
+                    font-weight: 600
+                }
+
+            nav svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                flex: none
+            }
+
+        main {
+            padding: 1.6rem clamp(1rem,2.5vw,3rem) 2rem;
+            min-width: 0
+        }
+
+        h1 {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .lead {
+            font-size: .95rem;
+            color: var(--muted);
+            margin: .25rem 0 1.2rem
+        }
+
+        .error {
+            background: #fdecec;
+            border: 1px solid #f5c2c0;
+            color: #b42318;
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .88rem;
+            margin-bottom: 1rem
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(14rem,1fr));
+            gap: 1rem;
+            margin-bottom: 1.2rem
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .8rem;
+            padding: 1.1rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04)
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--ink);
+            margin-bottom: .9rem
+        }
+
+        .ico {
+            width: 1.9rem;
+            height: 1.9rem;
+            border-radius: .45rem;
+            background: var(--soft);
+            display: grid;
+            place-items: center;
+            flex: none
+        }
+
+            .ico svg {
+                width: 1.1rem;
+                height: 1.1rem
+            }
+
+        .big {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.15
+        }
+
+        .sub {
+            font-size: .9rem;
+            color: var(--muted);
+            margin-top: .35rem;
+            display: flex;
+            align-items: center;
+            gap: .4rem;
+            min-height: 1.3em
+        }
+
+            .sub b {
+                color: var(--ink);
+                font-weight: 700
+            }
+
+        .dot {
+            width: .9rem;
+            height: .9rem;
+            border-radius: 50%;
+            background: var(--blue);
+            display: inline-block;
+            flex: none
+        }
+
+        .link {
+            margin-top: auto;
+            padding-top: 1rem
+        }
+
+            .link a {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: .4rem;
+                background: var(--soft);
+                color: var(--blue-dark);
+                text-decoration: none;
+                font-weight: 600;
+                font-size: .85rem;
+                border-radius: .5rem;
+                padding: .6rem .8rem
+            }
+
+                .link a:hover {
+                    background: #dbe7fb
+                }
+
+            .link svg {
+                width: .9rem;
+                height: .9rem
+            }
+
+        .banner {
+            position: relative;
+            overflow: hidden;
+            border-radius: .9rem;
+            min-height: 11rem;
+            padding: 1.6rem 1.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background-image: url('inicio.png'),linear-gradient(100deg,#dfeaf8 0%,#bcd3ec 45%,#7d9cc0 100%);
+            background-size: cover;
+            background-position: center right
+        }
+
+            .banner h2 {
+                font-size: 1.5rem;
+                font-weight: 800;
+                color: var(--navy);
+                line-height: 1.2;
+                margin-bottom: .8rem;
+                max-width: 20rem;
+                position: relative
+            }
+
+            .banner p {
+                font-size: .9rem;
+                color: var(--text);
+                max-width: 22rem;
+                position: relative
+            }
+
+            .banner svg.deco {
+                position: absolute;
+                right: 0;
+                bottom: 0;
+                width: 60%;
+                height: auto;
+                opacity: .55;
+                pointer-events: none
+            }
+
+        @media (max-width:800px) {
+            html {
+                font-size: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                padding: .5rem
+            }
+
+                nav a {
+                    white-space: nowrap;
+                    margin: 0 .25rem 0 0
+                }
+
+            main {
+                padding: 1.2rem 1rem
+            }
+        }
+    </style>
+    <script src="pwa.js" defer></script>
+    <script src="demo.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.6rem;height:2.6rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div><div class="brand-name">THE BOX</div><div class="brand-sub">GESTIÓN DE SEGUROS</div></div>
+        </div>
+        <div class="user">
+            <svg style="width:1.2rem;height:1.2rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>
+            <button type="button" id="user-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="user-name"></span>
+                <svg style="width:.8rem;height:.8rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div class="menu" id="user-menu" hidden><button type="button" id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Menú principal">
+            <a href="Inicio.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
+            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="MisSiniestros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
+            <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
+        </nav>
+
+        <main>
+            <h1>Hola, <span id="saludo-nombre"></span> 👋</h1>
+            <p class="lead">Gestioná tus seguros de forma simple y rápida.</p>
+
+            <div class="error" id="error" role="alert" hidden>No pudimos cargar tus datos. Probá de nuevo en unos minutos.</div>
+
+            <section class="cards" aria-label="Resumen">
+                <article class="card">
+                    <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3h6v3H9zM9 11h6M9 15h6" /></svg></span>Mis pólizas</div>
+                    <div class="big" id="polizas-num">–</div>
+                    <div class="sub">Vigentes</div>
+                    <div class="link"><a href="MisPolizas.html">Ver pólizas <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                </article>
+
+                <article class="card">
+                    <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4M12 13v4M10.5 14.5h3" /></svg></span>Próximo pago</div>
+                    <div class="big" id="pago-fecha">–</div>
+                    <div class="sub"><b id="pago-monto"></b></div>
+                    <div class="link"><a href="MisPagos.html">Ver mis pagos <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                </article>
+
+                <article class="card">
+                    <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3h6v3H9zM12 11v6M9 14h6" /></svg></span>Mis siniestros</div>
+                    <div class="big" id="siniestros-num">–</div>
+                    <div class="sub"><span class="dot"></span><span id="siniestros-estado"></span></div>
+                    <div class="link"><a href="MisSiniestros.html">Ver siniestros <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                </article>
+            </section>
+
+            <section class="banner">
+                <svg class="deco" viewBox="0 0 400 140" fill="none" aria-hidden="true">
+                    <path d="M0 140V95l70-55 55 40 60-62 90 80 50-30 75 72z" fill="#5b7ca6" />
+                    <path d="M0 140V112l90-30 80 25 110-20 120 33v20z" fill="#3f5f8a" />
+                </svg>
+                <h2>Tu tranquilidad, siempre en camino.</h2>
+                <p>En THE BOX te acompañamos en cada kilómetro.</p>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const API = 'http://localhost:5080';
+        const PAGINA_LOGIN = 'LogIn.html';
+        const PAGINA_PASSWORD = 'Password.html';
+
+        const $ = id => document.getElementById(id);
+        const token = sessionStorage.getItem('token');
+
+        function cerrarSesion() {
+            sessionStorage.clear();
+            location.replace(PAGINA_LOGIN);
+        }
+
+        async function cargarSiniestros() {
+            try {
+                const res = await fetch(API + '/api/siniestros', { headers: { Authorization: 'Bearer ' + token } });
+                if (!res.ok) return;
+                const abiertos = (await res.json()).filter(s => s.estado !== 'Cerrado'); // vienen del más nuevo al más viejo
+                $('siniestros-num').textContent = abiertos.length;
+                $('siniestros-estado').textContent = abiertos.length ? abiertos[0].estado : 'Sin siniestros abiertos';
+            } catch { /* la tarjeta queda con el guion */ }
+        }
+
+        async function cargarProximoPago() {
+            try {
+                const res = await fetch(API + '/api/pagos/proximo', { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 204) { $('pago-fecha').textContent = 'Sin cuotas'; $('pago-monto').textContent = 'Estás al día'; return; }
+                if (!res.ok) return;
+                const p = await res.json();
+                const [y, m, d] = p.vencimiento.split('-');
+                $('pago-fecha').textContent = `${d}/${m}/${y}`;
+                $('pago-monto').textContent = Number(p.monto).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }) + (p.vencida ? ' · Vencida' : '');
+                if (p.vencida) $('pago-monto').style.color = '#b42318';
+            } catch { /* la tarjeta queda con el guion */ }
+        }
+
+        async function cargarPolizas() {
+            try {
+                const res = await fetch(API + '/api/polizas', { headers: { Authorization: 'Bearer ' + token } });
+                if (!res.ok) return;
+                const lista = await res.json();
+                $('polizas-num').textContent = lista.filter(p => p.estado === 'Vigente').length;
+            } catch { /* la tarjeta queda con el guion */ }
+        }
+
+        async function cargar() {
+            try {
+                const res = await fetch(API + '/api/portal/me', { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 401) return cerrarSesion();
+                if (res.status === 403) return location.replace(PAGINA_PASSWORD); // todavía tiene la contraseña provisoria
+                if (!res.ok) throw new Error();
+
+                const p = await res.json();
+                $('user-name').textContent = p.nombre;
+                $('saludo-nombre').textContent = p.nombre.split(' ')[0];
+                cargarSiniestros();
+                cargarPolizas();
+                cargarProximoPago();
+            } catch {
+                $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+                $('saludo-nombre').textContent = (sessionStorage.getItem('nombre') || '').split(' ')[0];
+                $('error').hidden = false;
+            }
+        }
+
+        if (!token) cerrarSesion(); else cargar();
+
+        $('user-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            const abierto = $('user-menu').hidden;
+            $('user-menu').hidden = !abierto;
+            $('user-btn').setAttribute('aria-expanded', String(abierto));
+        });
+        document.addEventListener('click', () => { $('user-menu').hidden = true; });
+        $('logout').addEventListener('click', cerrarSesion);
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,1190 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Mis siniestros</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --side: #1f2d3f;
+            --bg: #f1f5fb;
+            --line: #e3e8f0;
+            --green: #22a06b;
+            --red: #b42318
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: .7rem clamp(1rem,2.5vw,3rem) .7rem 1.4rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: .03rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: .5rem;
+            letter-spacing: .1rem;
+            color: var(--navy);
+            margin-top: .22rem;
+            font-weight: 500
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            color: var(--ink);
+            font-size: .88rem;
+            position: relative
+        }
+
+            .user > button {
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer
+            }
+
+        .menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + .5rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1.5rem rgba(30,60,120,.15);
+            min-width: 10rem;
+            overflow: hidden
+        }
+
+            .menu button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                font: inherit;
+                font-size: .85rem;
+                padding: .65rem .9rem;
+                cursor: pointer;
+                color: var(--ink)
+            }
+
+                .menu button:hover {
+                    background: #f3f6fb
+                }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 13rem 1fr;
+            min-height: 0
+        }
+
+        nav {
+            background: var(--side);
+            padding: 1.1rem .8rem;
+            align-self: stretch
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                color: #cfd8e6;
+                text-decoration: none;
+                font-size: .88rem;
+                padding: .7rem .8rem;
+                border-radius: .45rem;
+                margin-bottom: .3rem
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,.07)
+                }
+
+                nav a.active {
+                    background: var(--blue);
+                    color: #fff;
+                    font-weight: 600
+                }
+
+            nav svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                flex: none
+            }
+
+        main {
+            padding: 1.6rem clamp(1rem,2.5vw,3rem) 2rem;
+            min-width: 0
+        }
+
+        .titulo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.1rem
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .lead {
+            font-size: .92rem;
+            color: var(--muted);
+            margin-top: .2rem
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: .5rem;
+            border: 0;
+            border-radius: .55rem;
+            background: var(--blue);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: .9rem;
+            padding: .7rem 1.3rem;
+            cursor: pointer
+        }
+
+            .btn:hover {
+                background: var(--blue-dark)
+            }
+
+            .btn:disabled {
+                opacity: .6;
+                cursor: default
+            }
+
+            .btn svg {
+                width: 1.05rem;
+                height: 1.05rem
+            }
+
+            .btn.ghost {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid #d5dbe5
+            }
+
+                .btn.ghost:hover {
+                    background: #f3f6fb
+                }
+
+        .aviso {
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .86rem;
+            margin-bottom: .9rem;
+            line-height: 1.45
+        }
+
+            .aviso.error {
+                background: #fdecec;
+                border: 1px solid #f5c2c0;
+                color: var(--red)
+            }
+
+                .aviso.error ul {
+                    margin: .3rem 0 0 1.1rem
+                }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            background: #e6f6ee;
+            border: 1px solid #bfe6d1;
+            color: #166a47;
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .88rem;
+            font-weight: 500;
+            margin-bottom: 1rem
+        }
+
+        .tabla-wrap {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .7rem;
+            overflow-x: auto;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 34rem
+        }
+
+        th {
+            background: #f6f8fc;
+            color: var(--ink);
+            font-weight: 600;
+            font-size: .84rem;
+            text-align: center;
+            padding: .85rem .8rem;
+            border-bottom: 1px solid var(--line);
+            white-space: nowrap
+        }
+
+        td {
+            padding: 1.05rem .8rem;
+            font-size: .9rem;
+            color: var(--ink);
+            border-bottom: 1px solid var(--line);
+            vertical-align: middle;
+            text-align: center
+        }
+
+        tr:last-child td {
+            border-bottom: 0
+        }
+
+        tbody tr:hover {
+            background: #fafcff
+        }
+
+        .badge {
+            display: inline-block;
+            font-size: .8rem;
+            font-weight: 500;
+            padding: .3rem .85rem;
+            border-radius: .45rem;
+            border: 1px solid transparent;
+            white-space: nowrap
+        }
+
+            .badge.cerrado {
+                background: #dff3e6;
+                color: #1f7a46;
+                border-color: #bfe3cc
+            }
+
+            .badge.en-analisis {
+                background: #fff0d2;
+                color: #9a6200;
+                border-color: #f3dcab
+            }
+
+            .badge.recibido {
+                background: #dbe8fb;
+                color: #1d4f9f;
+                border-color: #bfd3f3
+            }
+
+        .ver {
+            background: none;
+            border: 0;
+            cursor: pointer;
+            color: var(--blue);
+            padding: .3rem;
+            border-radius: .4rem
+        }
+
+            .ver:hover {
+                background: #eaf1fe
+            }
+
+            .ver svg {
+                width: 1.3rem;
+                height: 1.3rem;
+                display: block
+            }
+
+        .vacio {
+            padding: 2.2rem 1rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: .92rem
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,.55);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            z-index: 20
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: .9rem;
+            width: 100%;
+            max-width: 30rem;
+            max-height: 92vh;
+            overflow-y: auto;
+            padding: 1.3rem 1.4rem 1.4rem;
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.28)
+        }
+
+        .modal-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: .8rem;
+            margin-bottom: 1rem
+        }
+
+        .modal h3 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .cerrar {
+            background: none;
+            border: 0;
+            font-size: 1.5rem;
+            line-height: 1;
+            color: var(--muted);
+            cursor: pointer;
+            padding: .1rem .4rem;
+            border-radius: .4rem
+        }
+
+            .cerrar:hover {
+                background: #f1f4f9
+            }
+
+        .detalle {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .9rem 1rem;
+            margin-bottom: 1rem
+        }
+
+            .detalle dt {
+                font-size: .78rem;
+                color: var(--muted);
+                margin-bottom: .15rem
+            }
+
+            .detalle dd {
+                font-size: .92rem;
+                color: var(--ink);
+                font-weight: 500;
+                word-break: break-word
+            }
+
+            .detalle .ancho {
+                grid-column: 1/-1
+            }
+
+        .sec-titulo {
+            font-size: .86rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: .4rem 0 .6rem
+        }
+
+        .docs {
+            list-style: none;
+            display: grid;
+            gap: .3rem;
+            margin-bottom: 1rem;
+            font-size: .86rem;
+            color: var(--ink)
+        }
+
+            .docs li::before {
+                content: "📎 "
+            }
+
+        .linea {
+            list-style: none;
+            position: relative;
+            margin-left: .45rem;
+            padding-left: 1.1rem;
+            border-left: 2px solid var(--line)
+        }
+
+            .linea li {
+                position: relative;
+                padding-bottom: .9rem
+            }
+
+                .linea li::before {
+                    content: "";
+                    position: absolute;
+                    left: -1.6rem;
+                    top: .25rem;
+                    width: .8rem;
+                    height: .8rem;
+                    border-radius: 50%;
+                    background: #cbd5e5;
+                    border: 2px solid #fff
+                }
+
+                .linea li:last-child::before {
+                    background: var(--blue)
+                }
+
+            .linea .estado {
+                font-size: .88rem;
+                font-weight: 600;
+                color: var(--ink)
+            }
+
+            .linea .fecha {
+                font-size: .76rem;
+                color: var(--muted)
+            }
+
+            .linea .coment {
+                font-size: .84rem;
+                margin-top: .15rem
+            }
+
+        .modal-msg {
+            font-size: .9rem;
+            color: var(--muted);
+            padding: 1rem 0;
+            text-align: center
+        }
+
+        .campo {
+            margin-bottom: .85rem
+        }
+
+        label, .etiqueta {
+            display: block;
+            font-size: .84rem;
+            color: var(--ink);
+            font-weight: 500;
+            margin-bottom: .35rem
+        }
+
+        input[type=text], input[type=date], select, textarea {
+            width: 100%;
+            border: 1px solid #d9dde5;
+            border-radius: .55rem;
+            background: #f6f7fa;
+            padding: 0 .8rem;
+            font: inherit;
+            font-size: .92rem;
+            color: var(--ink);
+            outline: none
+        }
+
+        input[type=text], input[type=date], select {
+            height: 2.6rem
+        }
+
+        textarea {
+            padding: .65rem .8rem;
+            min-height: 6.5rem;
+            resize: vertical;
+            line-height: 1.45
+        }
+
+            input:focus, select:focus, textarea:focus {
+                border-color: var(--blue);
+                box-shadow: 0 0 0 .18rem rgba(37,99,235,.15);
+                background: #fff
+            }
+
+        .err {
+            display: none;
+            font-size: .78rem;
+            color: var(--red);
+            margin-top: .3rem
+        }
+
+        .campo.invalid .err {
+            display: block
+        }
+
+        .campo.invalid input, .campo.invalid select, .campo.invalid textarea {
+            border-color: var(--red);
+            background: #fff8f8
+        }
+
+        .contador {
+            font-size: .76rem;
+            color: var(--muted);
+            text-align: right;
+            margin-top: .2rem
+        }
+
+        .drop {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: .6rem;
+            border: 2px dashed #b9c9e4;
+            border-radius: .7rem;
+            background: #f6f9fe;
+            padding: .9rem 1rem;
+            cursor: pointer;
+            margin: 0;
+            font-weight: 500;
+            color: var(--blue-dark);
+            font-size: .88rem;
+            text-align: center
+        }
+
+            .drop:hover, .drop:focus-within {
+                background: #eef4fd;
+                border-color: var(--blue)
+            }
+
+            .drop svg {
+                width: 1.4rem;
+                height: 1.4rem;
+                flex: none
+            }
+
+            .drop input {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                opacity: 0
+            }
+
+        .campo.invalid .drop {
+            border-color: var(--red);
+            background: #fff8f8
+        }
+
+        .ayuda {
+            font-size: .76rem;
+            color: var(--muted);
+            margin-top: .35rem
+        }
+
+        .archivos {
+            list-style: none;
+            display: grid;
+            gap: .35rem;
+            margin-top: .6rem
+        }
+
+            .archivos li {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: .6rem;
+                background: #f3f6fb;
+                border: 1px solid var(--line);
+                border-radius: .5rem;
+                padding: .4rem .6rem;
+                font-size: .84rem;
+                color: var(--ink)
+            }
+
+            .archivos span {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap
+            }
+
+            .archivos button {
+                flex: none;
+                width: 1.5rem;
+                height: 1.5rem;
+                border: 0;
+                border-radius: 50%;
+                background: #dfe5ef;
+                color: #374151;
+                font-size: 1rem;
+                line-height: 1;
+                cursor: pointer
+            }
+
+        .acciones {
+            display: flex;
+            gap: .6rem;
+            justify-content: flex-end;
+            margin-top: 1rem
+        }
+
+        .exito {
+            text-align: center;
+            padding: .6rem 0 .4rem
+        }
+
+            .exito .ok {
+                width: 4rem;
+                height: 4rem;
+                border-radius: 50%;
+                background: var(--green);
+                display: grid;
+                place-items: center;
+                margin: 0 auto .9rem
+            }
+
+            .exito h4 {
+                font-size: 1.4rem;
+                font-weight: 800;
+                color: #1f7a46;
+                margin-bottom: .4rem
+            }
+
+            .exito p {
+                font-size: .92rem;
+                line-height: 1.5;
+                margin-bottom: .4rem
+            }
+
+            .exito .num {
+                display: inline-block;
+                background: #f3f6fb;
+                border: 1px solid var(--line);
+                border-radius: .5rem;
+                padding: .4rem .9rem;
+                font-size: 1.1rem;
+                font-weight: 800;
+                color: var(--navy);
+                margin: .3rem 0 .8rem
+            }
+
+        @media (max-width:800px) {
+            html {
+                font-size: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                padding: .5rem
+            }
+
+                nav a {
+                    white-space: nowrap;
+                    margin: 0 .25rem 0 0
+                }
+
+            main {
+                padding: 1.2rem 1rem
+            }
+
+            .detalle {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
+    <script src="pwa.js" defer></script>
+    <script src="demo.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.6rem;height:2.6rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div><div class="brand-name">THE BOX</div><div class="brand-sub">GESTIÓN DE SEGUROS</div></div>
+        </div>
+        <div class="user">
+            <svg style="width:1.2rem;height:1.2rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>
+            <button type="button" id="user-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="user-name"></span>
+                <svg style="width:.8rem;height:.8rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div class="menu" id="user-menu" hidden><button type="button" id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Menú principal">
+            <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
+            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="MisSiniestros.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
+            <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
+        </nav>
+
+        <main>
+            <div class="titulo">
+                <div>
+                    <h1>Mis siniestros</h1>
+                    <p class="lead">Consultá el estado de tus siniestros.</p>
+                </div>
+                <button class="btn" type="button" id="denunciar">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14" /></svg>
+                    Denunciar siniestro
+                </button>
+            </div>
+
+            <div class="toast" id="toast" role="status" hidden>
+                <svg style="width:1.2rem;height:1.2rem;flex:none" viewBox="0 0 24 24" fill="none" stroke="#166a47" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="m8 12.5 3 3 5-6" /></svg>
+                <span id="toast-text"></span>
+            </div>
+            <div class="aviso error" id="error" role="alert" hidden></div>
+
+            <div class="tabla-wrap">
+                <table>
+                    <thead>
+                        <tr><th>N.º Siniestro</th><th>Fecha</th><th>Tipo</th><th>Estado</th><th>Acciones</th></tr>
+                    </thead>
+                    <tbody id="filas"></tbody>
+                </table>
+                <p class="vacio" id="estado-tabla">Cargando tus siniestros…</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Detalle y seguimiento -->
+    <div class="overlay" id="overlay-detalle" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="det-titulo">
+            <div class="modal-head">
+                <h3 id="det-titulo">Detalle del siniestro</h3>
+                <button type="button" class="cerrar" id="det-cerrar" aria-label="Cerrar">×</button>
+            </div>
+            <p class="modal-msg" id="det-msg" hidden></p>
+            <div id="det-contenido" hidden>
+                <dl class="detalle">
+                    <div><dt>N.º de siniestro</dt><dd id="d-numero"></dd></div>
+                    <div><dt>Estado actual</dt><dd><span class="badge" id="d-estado"></span></dd></div>
+                    <div><dt>Fecha del siniestro</dt><dd id="d-fecha"></dd></div>
+                    <div><dt>Tipo</dt><dd id="d-tipo"></dd></div>
+                    <div class="ancho"><dt>Póliza</dt><dd id="d-poliza"></dd></div>
+                    <div class="ancho"><dt>Lugar</dt><dd id="d-lugar"></dd></div>
+                    <div class="ancho"><dt>Descripción</dt><dd id="d-desc"></dd></div>
+                </dl>
+                <p class="sec-titulo">Documentación presentada</p>
+                <ul class="docs" id="d-docs"></ul>
+                <p class="sec-titulo">Seguimiento</p>
+                <ul class="linea" id="d-linea"></ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nueva denuncia -->
+    <div class="overlay" id="overlay-denuncia" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="den-titulo">
+            <div id="vista-form">
+                <div class="modal-head">
+                    <h3 id="den-titulo">Denunciar siniestro</h3>
+                    <button type="button" class="cerrar" id="den-cerrar" aria-label="Cerrar">×</button>
+                </div>
+
+                <div class="aviso error" id="den-alerta" role="alert" hidden></div>
+
+                <form id="form" novalidate>
+                    <div class="campo" data-campo="polizaId">
+                        <label for="polizaId">Póliza</label>
+                        <select id="polizaId"></select><span class="err"></span>
+                    </div>
+                    <div class="campo" data-campo="fecha">
+                        <label for="fecha">Fecha del siniestro</label>
+                        <input id="fecha" type="date"><span class="err"></span>
+                    </div>
+                    <div class="campo" data-campo="tipo">
+                        <label for="tipo">Tipo de siniestro</label>
+                        <select id="tipo">
+                            <option value="">Elegí una opción</option>
+                            <option>Accidente</option>
+                            <option>Robo</option>
+                            <option>Incendio</option>
+                            <option>Daños por granizo</option>
+                            <option>Otro</option>
+                        </select><span class="err"></span>
+                    </div>
+                    <div class="campo" data-campo="lugar">
+                        <label for="lugar">Lugar donde ocurrió</label>
+                        <input id="lugar" type="text" maxlength="200" placeholder="Calle, altura y localidad"><span class="err"></span>
+                    </div>
+                    <div class="campo" data-campo="descripcion">
+                        <label for="descripcion">Descripción de lo ocurrido</label>
+                        <textarea id="descripcion" maxlength="2000" placeholder="Contanos qué pasó, con el mayor detalle posible"></textarea>
+                        <div class="contador" id="contador-desc">0 / 2000</div><span class="err"></span>
+                    </div>
+
+                    <div class="campo" data-campo="documentos">
+                        <span class="etiqueta">Documentación respaldatoria</span>
+                        <label class="drop" for="docs-input">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.5 12.5 21a5.5 5.5 0 0 1-7.8-7.8l9-9a3.7 3.7 0 0 1 5.2 5.2l-9 9a1.8 1.8 0 0 1-2.6-2.6l8.3-8.3" /></svg>
+                            <span>Adjuntar fotos, denuncia policial u otros documentos</span>
+                            <input id="docs-input" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" multiple>
+                        </label>
+                        <p class="ayuda">Hasta 5 archivos de 5 MB. JPG, PNG, WEBP o PDF.</p>
+                        <ul class="archivos" id="archivos"></ul>
+                        <span class="err"></span>
+                    </div>
+
+                    <div class="acciones">
+                        <button type="button" class="btn ghost" id="den-cancelar">Cancelar</button>
+                        <button type="submit" class="btn" id="den-enviar">Enviar denuncia</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="exito" id="vista-exito" hidden>
+                <div class="ok"><svg style="width:2rem;height:2rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></div>
+                <h4>¡Denuncia registrada!</h4>
+                <p>Guardá tu número de seguimiento para consultar el estado de tu siniestro:</p>
+                <span class="num" id="exito-numero"></span>
+                <div class="acciones" style="justify-content:center"><button type="button" class="btn" id="exito-cerrar">Cerrar</button></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+const API = 'http://localhost:5080';
+const PAGINA_LOGIN = 'LogIn.html';
+const PAGINA_PASSWORD = 'Password.html';
+const MAX_DOCS = 5, MAX_MB = 5;
+
+const $ = id => document.getElementById(id);
+const token = sessionStorage.getItem('token');
+let documentos = [];
+
+function cerrarSesion() { sessionStorage.clear(); location.replace(PAGINA_LOGIN); }
+
+// 401 -> login, 403 -> todavía tiene la contraseña provisoria.
+async function llamar(ruta, opciones = {}) {
+  const res = await fetch(API + ruta, { ...opciones, headers: { Authorization: 'Bearer ' + token } });
+  if (res.status === 401) { cerrarSesion(); return null; }
+  if (res.status === 403) { location.replace(PAGINA_PASSWORD); return null; }
+  return res;
+}
+
+const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
+const fmtFechaHora = f => new Date(/(Z|[+-]\d\d:\d\d)$/.test(f) ? f : f + 'Z').toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' });
+const claseEstado = e => String(e).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/\s+/g, '-');
+function mostrarError(msg) { $('estado-tabla').hidden = true; $('error').textContent = msg; $('error').hidden = false; }
+
+/* ---------- Listado ---------- */
+function celda(t) { const td = document.createElement('td'); td.textContent = t; return td; }
+
+async function cargarLista() {
+  const res = await llamar('/api/siniestros');
+  if (!res) return;
+  if (!res.ok) throw new Error();
+  const lista = await res.json();
+
+  $('filas').replaceChildren(...lista.map(s => {
+    const tr = document.createElement('tr');
+    const tdE = document.createElement('td');
+    const b = document.createElement('span'); b.className = 'badge ' + claseEstado(s.estado); b.textContent = s.estado; tdE.append(b);
+
+    const tdA = document.createElement('td');
+    const ver = document.createElement('button');
+    ver.type = 'button'; ver.className = 'ver';
+    ver.setAttribute('aria-label', 'Ver el detalle del siniestro ' + s.numero);
+    ver.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg>';
+    ver.addEventListener('click', () => abrirDetalle(s.id));
+    tdA.append(ver);
+
+    tr.append(celda(s.numero), celda(fmtFecha(s.fecha)), celda(s.tipo), tdE, tdA);
+    return tr;
+  }));
+
+  $('estado-tabla').hidden = lista.length > 0;
+  if (!lista.length) $('estado-tabla').textContent = 'Todavía no registraste ningún siniestro.';
+}
+
+async function iniciar() {
+  try {
+    const rPerfil = await llamar('/api/portal/me');
+    if (!rPerfil) return;
+    if (!rPerfil.ok) throw new Error();
+    $('user-name').textContent = (await rPerfil.json()).nombre;
+    await cargarLista();
+  } catch {
+    $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+    mostrarError('No pudimos cargar tus siniestros. Probá de nuevo en unos minutos.');
+  }
+}
+
+/* ---------- Detalle y seguimiento ---------- */
+async function abrirDetalle(id) {
+  $('det-contenido').hidden = true;
+  $('det-msg').textContent = 'Cargando…';
+  $('det-msg').hidden = false;
+  $('overlay-detalle').hidden = false;
+  $('det-cerrar').focus();
+  try {
+    const res = await llamar('/api/siniestros/' + id);   // trae el estado actualizado
+    if (!res) return;
+    if (!res.ok) throw new Error();
+    const s = await res.json();
+
+    $('d-numero').textContent = s.numero;
+    $('d-estado').textContent = s.estado;
+    $('d-estado').className = 'badge ' + claseEstado(s.estado);
+    $('d-fecha').textContent = fmtFecha(s.fecha);
+    $('d-tipo').textContent = s.tipo;
+    $('d-poliza').textContent = `${s.poliza} · ${s.vehiculo}`;
+    $('d-lugar').textContent = s.lugar;
+    $('d-desc').textContent = s.descripcion;
+
+    $('d-docs').replaceChildren(...(s.documentos.length ? s.documentos : ['Sin documentos']).map(n => { const li = document.createElement('li'); li.textContent = n; return li; }));
+    $('d-linea').replaceChildren(...s.seguimiento.map(x => {
+      const li = document.createElement('li');
+      const e = document.createElement('div'); e.className = 'estado'; e.textContent = x.estado;
+      const f = document.createElement('div'); f.className = 'fecha'; f.textContent = fmtFechaHora(x.fecha);
+      const c = document.createElement('div'); c.className = 'coment'; c.textContent = x.comentario;
+      li.append(e, f, c); return li;
+    }));
+
+    $('det-msg').hidden = true;
+    $('det-contenido').hidden = false;
+  } catch {
+    $('det-msg').textContent = 'No pudimos cargar el detalle del siniestro.';
+  }
+}
+const cerrarDetalle = () => { $('overlay-detalle').hidden = true; };
+$('det-cerrar').addEventListener('click', cerrarDetalle);
+$('overlay-detalle').addEventListener('click', e => { if (e.target === $('overlay-detalle')) cerrarDetalle(); });
+
+/* ---------- Nueva denuncia ---------- */
+let polizasVigentes = null;
+
+async function abrirDenuncia() {
+  $('form').reset();
+  documentos = [];
+  pintarArchivos();
+  limpiarErrores();
+  $('contador-desc').textContent = '0 / 2000';
+  $('fecha').max = new Date().toISOString().slice(0, 10);
+  $('vista-form').hidden = false;
+  $('vista-exito').hidden = true;
+  $('overlay-denuncia').hidden = false;
+
+  try {
+    if (polizasVigentes === null) {
+      const res = await llamar('/api/polizas');
+      if (!res) return;
+      if (!res.ok) throw new Error();
+      polizasVigentes = (await res.json()).filter(p => p.estado === 'Vigente');
+    }
+    if (!polizasVigentes.length) {
+      $('den-alerta').textContent = 'No tenés pólizas vigentes sobre las que denunciar un siniestro.';
+      $('den-alerta').hidden = false;
+      $('den-enviar').disabled = true;
+      $('polizaId').replaceChildren();
+      return;
+    }
+    $('den-enviar').disabled = false;
+    $('polizaId').replaceChildren(...polizasVigentes.map(p => {
+      const o = document.createElement('option'); o.value = p.id; o.textContent = `${p.numero} - ${p.vehiculo}`; return o;
+    }));
+  } catch {
+    $('den-alerta').textContent = 'No pudimos cargar tus pólizas. Probá de nuevo en unos minutos.';
+    $('den-alerta').hidden = false;
+    $('den-enviar').disabled = true;
+  }
+}
+
+function cerrarDenuncia() { $('overlay-denuncia').hidden = true; }
+$('denunciar').addEventListener('click', abrirDenuncia);
+$('den-cerrar').addEventListener('click', cerrarDenuncia);
+$('den-cancelar').addEventListener('click', cerrarDenuncia);
+$('exito-cerrar').addEventListener('click', cerrarDenuncia);
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  cerrarDetalle(); cerrarDenuncia();
+});
+
+$('descripcion').addEventListener('input', e => { $('contador-desc').textContent = `${e.target.value.length} / 2000`; });
+$('form').addEventListener('input', e => { const c = e.target.closest('.campo'); if (c) c.classList.remove('invalid'); });
+
+function limpiarErrores() {
+  $('form').querySelectorAll('.campo').forEach(c => { c.classList.remove('invalid'); c.querySelector('.err').textContent = ''; });
+  $('den-alerta').hidden = true;
+}
+
+function validar() {
+  const e = [];
+  const falta = (campo, msg) => e.push({ campo, msg });
+  const hoy = new Date().toISOString().slice(0, 10);
+
+  if (!$('polizaId').value) falta('polizaId', 'Elegí una póliza.');
+  if (!$('fecha').value) falta('fecha', 'Ingresá la fecha del siniestro.');
+  else if ($('fecha').value > hoy) falta('fecha', 'La fecha del siniestro no puede ser futura.');
+  if (!$('tipo').value) falta('tipo', 'Elegí el tipo de siniestro.');
+  if ($('lugar').value.trim().length < 3) falta('lugar', 'Indicá el lugar donde ocurrió.');
+  if ($('descripcion').value.trim().length < 20) falta('descripcion', 'Describí lo ocurrido (mínimo 20 caracteres).');
+  if (!documentos.length) falta('documentos', 'Adjuntá al menos un documento respaldatorio.');
+  return e;
+}
+
+function mostrarErroresCampo(errores) {
+  limpiarErrores();
+  errores.forEach(({ campo, msg }) => {
+    const c = $('form').querySelector(`.campo[data-campo="${campo}"]`);
+    if (!c) return;
+    c.classList.add('invalid'); c.querySelector('.err').textContent = msg;
+  });
+}
+
+/* Archivos: las imágenes se reducen antes de subir; los PDF se envían tal cual. */
+async function prepararArchivo(file) {
+  if (file.type === 'application/pdf') return file.size <= MAX_MB * 1024 * 1024 ? file : null;
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return null;
+  try {
+    const bmp = await createImageBitmap(file);
+    const esc = Math.min(1, 1800 / Math.max(bmp.width, bmp.height));
+    if (esc === 1 && file.size <= (MAX_MB - 0.5) * 1024 * 1024) { bmp.close?.(); return file; }
+    const c = document.createElement('canvas');
+    c.width = Math.round(bmp.width * esc); c.height = Math.round(bmp.height * esc);
+    c.getContext('2d').drawImage(bmp, 0, 0, c.width, c.height);
+    bmp.close?.();
+    const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', 0.85));
+    if (!blob) return file.size <= MAX_MB * 1024 * 1024 ? file : null;
+    return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch {
+    return file.size <= MAX_MB * 1024 * 1024 ? file : null;
+  }
+}
+
+function pintarArchivos() {
+  $('archivos').replaceChildren(...documentos.map((f, i) => {
+    const li = document.createElement('li');
+    const n = document.createElement('span'); n.textContent = f.name; n.title = f.name;
+    const b = document.createElement('button'); b.type = 'button'; b.textContent = '×'; b.setAttribute('aria-label', 'Quitar ' + f.name);
+    b.onclick = () => { documentos.splice(i, 1); pintarArchivos(); };
+    li.append(n, b); return li;
+  }));
+}
+
+$('docs-input').addEventListener('change', async e => {
+  const campo = $('form').querySelector('.campo[data-campo="documentos"]');
+  let aviso = '';
+  for (const file of [...e.target.files]) {
+    if (documentos.length >= MAX_DOCS) { aviso = `Podés adjuntar hasta ${MAX_DOCS} archivos.`; break; }
+    const listo = await prepararArchivo(file);
+    if (!listo) { aviso = `"${file.name}" no es válido (JPG, PNG, WEBP o PDF de hasta ${MAX_MB} MB).`; continue; }
+    documentos.push(listo);
+  }
+  e.target.value = '';
+  pintarArchivos();
+  campo.classList.toggle('invalid', Boolean(aviso));
+  campo.querySelector('.err').textContent = aviso;
+});
+
+$('form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const errores = validar();
+  if (errores.length) {
+    mostrarErroresCampo(errores);
+    const primero = $('form').querySelector('.campo.invalid input, .campo.invalid select, .campo.invalid textarea');
+    if (primero) primero.focus();
+    return;
+  }
+  limpiarErrores();
+
+  const fd = new FormData();
+  fd.append('polizaId', $('polizaId').value);
+  fd.append('fecha', $('fecha').value);
+  fd.append('tipo', $('tipo').value);
+  fd.append('lugar', $('lugar').value.trim());
+  fd.append('descripcion', $('descripcion').value.trim());
+  documentos.forEach(f => fd.append('documentos', f, f.name));
+
+  const btn = $('den-enviar');
+  btn.disabled = true; btn.textContent = 'Enviando…';
+  try {
+    const res = await llamar('/api/siniestros', { method: 'POST', body: fd });
+    if (!res) return;
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const msgs = data.errores || ['No pudimos registrar la denuncia. Probá de nuevo en unos minutos.'];
+      const ul = document.createElement('ul');
+      msgs.forEach(m => { const li = document.createElement('li'); li.textContent = m; ul.append(li); });
+      $('den-alerta').replaceChildren(ul);
+      $('den-alerta').hidden = false;
+      return;
+    }
+    $('exito-numero').textContent = data.numero;
+    $('vista-form').hidden = true;
+    $('vista-exito').hidden = false;
+    cargarLista().catch(() => {});   // el nuevo caso aparece en la tabla
+  } catch {
+    $('den-alerta').textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
+    $('den-alerta').hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = 'Enviar denuncia';
+  }
+});
+
+/* ---------- Menú de usuario ---------- */
+$('user-btn').addEventListener('click', e => {
+  e.stopPropagation();
+  const abierto = $('user-menu').hidden;
+  $('user-menu').hidden = !abierto;
+  $('user-btn').setAttribute('aria-expanded', String(abierto));
+});
+document.addEventListener('click', () => { $('user-menu').hidden = true; });
+$('logout').addEventListener('click', cerrarSesion);
+
+if (!token) cerrarSesion(); else iniciar();
+    </script>
+</body>
+</html>
+

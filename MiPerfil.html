@@ -1,0 +1,646 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>The Box Seguros – Mi perfil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --blue: #2563eb;
+            --blue-dark: #1e4fc4;
+            --navy: #16325c;
+            --ink: #111827;
+            --text: #374151;
+            --muted: #6b7280;
+            --green: #22a06b;
+            --side: #1f2d3f;
+            --bg: #f1f5fb;
+            --line: #e3e8f0
+        }
+
+        html {
+            font-size: clamp(14px,1.25vw,32px)
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        [hidden] {
+            display: none !important
+        }
+
+        body {
+            font-family: 'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+            color: var(--text);
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fff;
+            border-bottom: 1px solid var(--line);
+            padding: .7rem clamp(1rem,2.5vw,3rem) .7rem 1.4rem;
+            position: relative;
+            z-index: 5
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: .6rem
+        }
+
+        .brand-name {
+            font-weight: 800;
+            font-size: 1.35rem;
+            letter-spacing: .03rem;
+            color: var(--navy);
+            line-height: 1
+        }
+
+        .brand-sub {
+            font-size: .5rem;
+            letter-spacing: .1rem;
+            color: var(--navy);
+            margin-top: .22rem;
+            font-weight: 500
+        }
+
+        .user {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            color: var(--ink);
+            font-size: .88rem;
+            position: relative
+        }
+
+            .user > button {
+                display: flex;
+                align-items: center;
+                gap: .35rem;
+                background: none;
+                border: 0;
+                font: inherit;
+                color: inherit;
+                cursor: pointer
+            }
+
+        .menu {
+            position: absolute;
+            right: 0;
+            top: calc(100% + .5rem);
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .5rem;
+            box-shadow: 0 .5rem 1.5rem rgba(30,60,120,.15);
+            min-width: 10rem;
+            overflow: hidden
+        }
+
+            .menu button {
+                display: block;
+                width: 100%;
+                text-align: left;
+                background: none;
+                border: 0;
+                font: inherit;
+                font-size: .85rem;
+                padding: .65rem .9rem;
+                cursor: pointer;
+                color: var(--ink)
+            }
+
+                .menu button:hover {
+                    background: #f3f6fb
+                }
+
+        .layout {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 13rem 1fr;
+            min-height: 0
+        }
+
+        nav {
+            background: var(--side);
+            padding: 1.1rem .8rem;
+            align-self: stretch
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: .75rem;
+                color: #cfd8e6;
+                text-decoration: none;
+                font-size: .88rem;
+                padding: .7rem .8rem;
+                border-radius: .45rem;
+                margin-bottom: .3rem
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,.07)
+                }
+
+                nav a.active {
+                    background: var(--blue);
+                    color: #fff;
+                    font-weight: 600
+                }
+
+            nav svg {
+                width: 1.15rem;
+                height: 1.15rem;
+                flex: none
+            }
+
+        main {
+            padding: 1.6rem clamp(1rem,2.5vw,3rem) 2rem;
+            min-width: 0
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--navy)
+        }
+
+        .lead {
+            font-size: .92rem;
+            color: var(--muted);
+            margin: .2rem 0 1rem
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: .6rem;
+            background: #e6f6ee;
+            border: 1px solid #bfe6d1;
+            color: #166a47;
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            font-size: .88rem;
+            font-weight: 500;
+            margin-bottom: 1rem
+        }
+
+            .toast.error {
+                background: #fdecec;
+                border-color: #f5c2c0;
+                color: #b42318
+            }
+
+        .card {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .7rem;
+            padding: 1.1rem 1.3rem 1.3rem;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04)
+        }
+
+        .card-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem
+        }
+
+            .card-head h2 {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--ink)
+            }
+
+        .btn {
+            border: 0;
+            border-radius: .5rem;
+            background: var(--blue);
+            color: #fff;
+            font: inherit;
+            font-weight: 600;
+            font-size: .88rem;
+            padding: .65rem 1.1rem;
+            cursor: pointer
+        }
+
+            .btn:hover {
+                background: var(--blue-dark)
+            }
+
+            .btn:disabled {
+                opacity: .6;
+                cursor: default
+            }
+
+            .btn.ghost {
+                background: #fff;
+                color: var(--ink);
+                border: 1px solid #d5dbe5
+            }
+
+                .btn.ghost:hover {
+                    background: #f3f6fb
+                }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(15rem,1fr));
+            gap: 1rem 1.5rem
+        }
+
+            .grid dt {
+                font-size: .82rem;
+                color: var(--muted);
+                margin-bottom: .15rem
+            }
+
+            .grid dd {
+                font-size: .98rem;
+                color: var(--ink);
+                font-weight: 500;
+                word-break: break-word;
+                min-height: 1.3em
+            }
+
+                .grid dd.strong {
+                    font-weight: 700
+                }
+
+        .info {
+            display: flex;
+            gap: .8rem;
+            align-items: center;
+            background: #e7eefa;
+            border-radius: .6rem;
+            padding: .9rem 1.1rem;
+            margin-top: 1rem;
+            font-size: .9rem;
+            color: var(--text);
+            line-height: 1.45
+        }
+
+            .info svg {
+                flex: none;
+                width: 1.5rem;
+                height: 1.5rem
+            }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(17,24,39,.5);
+            display: grid;
+            place-items: center;
+            padding: 1rem;
+            z-index: 20
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: .9rem;
+            width: 100%;
+            max-width: 24rem;
+            padding: 1.3rem 1.4rem 1.4rem;
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.25)
+        }
+
+            .modal h3 {
+                font-size: 1.15rem;
+                font-weight: 800;
+                color: var(--navy);
+                margin-bottom: .2rem
+            }
+
+            .modal .sub {
+                font-size: .84rem;
+                color: var(--muted);
+                margin-bottom: 1rem
+            }
+
+        label {
+            display: block;
+            font-size: .82rem;
+            color: var(--ink);
+            margin-bottom: .35rem
+        }
+
+        .field {
+            border: 1px solid #dfe4ec;
+            border-radius: .5rem;
+            padding: 0 .8rem;
+            height: 2.5rem;
+            background: #fafbfd;
+            margin-bottom: .8rem;
+            display: flex;
+            align-items: center
+        }
+
+            .field:focus-within {
+                border-color: var(--blue);
+                box-shadow: 0 0 0 .18rem rgba(37,99,235,.15);
+                background: #fff
+            }
+
+            .field input {
+                flex: 1;
+                min-width: 0;
+                border: 0;
+                background: transparent;
+                font: inherit;
+                font-size: .9rem;
+                color: var(--ink);
+                outline: none
+            }
+
+        .rules {
+            list-style: none;
+            display: grid;
+            gap: .35rem;
+            margin: .1rem 0 1rem
+        }
+
+            .rules li {
+                display: flex;
+                align-items: center;
+                gap: .5rem;
+                font-size: .8rem;
+                color: var(--ink)
+            }
+
+            .rules .ck {
+                flex: none;
+                width: 1rem;
+                height: 1rem;
+                border-radius: 50%;
+                background: var(--green);
+                display: grid;
+                place-items: center;
+                transition: background .2s
+            }
+
+            .rules li.off .ck {
+                background: #cbd2dc
+            }
+
+        .actions {
+            display: flex;
+            gap: .6rem;
+            justify-content: flex-end
+        }
+
+        .msg {
+            font-size: .8rem;
+            color: #b42318;
+            min-height: 1em;
+            margin-bottom: .6rem
+        }
+
+        @media (max-width:800px) {
+            html {
+                font-size: 16px
+            }
+
+            .layout {
+                grid-template-columns: 1fr
+            }
+
+            nav {
+                display: flex;
+                overflow-x: auto;
+                padding: .5rem
+            }
+
+                nav a {
+                    white-space: nowrap;
+                    margin: 0 .25rem 0 0
+                }
+
+            main {
+                padding: 1.2rem 1rem
+            }
+
+            .card-head {
+                flex-direction: column;
+                align-items: flex-start
+            }
+        }
+    </style>
+    <script src="pwa.js" defer></script>
+    <script src="demo.js"></script>
+</head>
+<body>
+
+    <header>
+        <div class="brand">
+            <svg style="width:2.6rem;height:2.6rem" viewBox="0 0 46 46" fill="none">
+                <path d="M23 3 41 12.5v21L23 43 5 33.5v-21L23 3Z" fill="#1d4f9f" />
+                <path d="M23 3 41 12.5 23 22 5 12.5 23 3Z" fill="#3b82f6" />
+                <path d="M23 22v21L5 33.5v-21L23 22Z" fill="#16325c" />
+                <rect x="18" y="26" width="10" height="8" rx="1.5" fill="#fff" />
+                <path d="M20 26v-2.5a3 3 0 0 1 6 0V26" stroke="#fff" stroke-width="1.6" fill="none" />
+            </svg>
+            <div><div class="brand-name">THE BOX</div><div class="brand-sub">GESTIÓN DE SEGUROS</div></div>
+        </div>
+        <div class="user">
+            <svg style="width:1.2rem;height:1.2rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>
+            <button type="button" id="user-btn" aria-haspopup="true" aria-expanded="false">
+                <span id="user-name"></span>
+                <svg style="width:.8rem;height:.8rem" viewBox="0 0 24 24" fill="none" stroke="#111827" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6" /></svg>
+            </button>
+            <div class="menu" id="user-menu" hidden><button type="button" id="logout">Cerrar sesión</button></div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <nav aria-label="Menú principal">
+            <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
+            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="MisSiniestros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
+            <a href="MiPerfil.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
+        </nav>
+
+        <main>
+            <h1>Mi perfil</h1>
+            <p class="lead">Consultá tu información personal.</p>
+
+            <div class="toast" id="toast" role="status" hidden>
+                <svg style="width:1.2rem;height:1.2rem;flex:none" viewBox="0 0 24 24" fill="none" stroke="#166a47" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><path d="m8 12.5 3 3 5-6" /></svg>
+                <span id="toast-text"></span>
+            </div>
+            <div class="toast error" id="perfil-error" role="alert" hidden>No pudimos cargar tus datos. Probá de nuevo en unos minutos.</div>
+
+            <section class="card">
+                <div class="card-head">
+                    <h2>Datos personales</h2>
+                    <button class="btn" type="button" id="open-modal">Cambiar contraseña</button>
+                </div>
+                <dl class="grid">
+                    <div><dt>Nombre y apellido</dt><dd class="strong" id="p-nombre"></dd></div>
+                    <div><dt>DNI</dt><dd id="p-dni"></dd></div>
+                    <div><dt>Email</dt><dd id="p-email"></dd></div>
+                    <div><dt>Teléfono</dt><dd id="p-telefono"></dd></div>
+                </dl>
+            </section>
+
+            <div class="info">
+                <svg viewBox="0 0 24 24" fill="none"><rect x="4.5" y="11" width="15" height="10" rx="2" fill="#2563eb" /><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#2563eb" stroke-width="2" stroke-linecap="round" /><circle cx="12" cy="16" r="1.4" fill="#fff" /></svg>
+                <span>Si necesitás actualizar alguno de tus datos, comunicate con nuestro centro de atención al cliente.</span>
+            </div>
+        </main>
+    </div>
+
+    <div class="overlay" id="overlay" hidden>
+        <form class="modal" id="form" role="dialog" aria-modal="true" aria-labelledby="modal-title" novalidate>
+            <h3 id="modal-title">Cambiar contraseña</h3>
+            <p class="sub">Ingresá tu contraseña actual y elegí una nueva.</p>
+
+            <label for="actual">Contraseña actual</label>
+            <div class="field"><input id="actual" type="password" autocomplete="current-password"></div>
+
+            <label for="nueva">Nueva contraseña</label>
+            <div class="field"><input id="nueva" type="password" autocomplete="new-password"></div>
+
+            <label for="confirmar">Confirmar nueva contraseña</label>
+            <div class="field"><input id="confirmar" type="password" autocomplete="new-password"></div>
+
+            <ul class="rules">
+                <li id="r-len" class="off"><span class="ck"><svg style="width:.6rem;height:.6rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>Mínimo 8 caracteres</li>
+                <li id="r-mix" class="off"><span class="ck"><svg style="width:.6rem;height:.6rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>Al menos una letra y un número</li>
+                <li id="r-old"><span class="ck"><svg style="width:.6rem;height:.6rem" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7" /></svg></span>No puede ser igual a tus últimas 3 contraseñas</li>
+            </ul>
+
+            <p class="msg" id="msg" role="alert"></p>
+            <div class="actions">
+                <button type="button" class="btn ghost" id="cancel">Cancelar</button>
+                <button type="submit" class="btn" id="save">Guardar contraseña</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const API = 'http://localhost:5080';
+        const PAGINA_LOGIN = 'LogIn.html';
+        const PAGINA_PASSWORD = 'Password.html';
+
+        const $ = id => document.getElementById(id);
+        let token = sessionStorage.getItem('token');
+
+        function cerrarSesion() {
+            sessionStorage.clear();
+            location.replace(PAGINA_LOGIN);
+        }
+
+        function formatearDni(dni) {
+            return String(dni).replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        async function cargarPerfil() {
+            try {
+                const res = await fetch(API + '/api/portal/me', { headers: { Authorization: 'Bearer ' + token } });
+                if (res.status === 401) return cerrarSesion();
+                if (res.status === 403) return location.replace(PAGINA_PASSWORD); // todavía tiene la contraseña provisoria
+                if (!res.ok) throw new Error();
+
+                const p = await res.json();
+                $('user-name').textContent = p.nombre;
+                $('p-nombre').textContent = p.nombre;
+                $('p-dni').textContent = formatearDni(p.dni);
+                $('p-email').textContent = p.email || '—';
+                $('p-telefono').textContent = p.telefono || '—';
+            } catch {
+                $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+                $('perfil-error').hidden = false;
+            }
+        }
+
+        if (!token) cerrarSesion(); else cargarPerfil();
+
+        /* Menú de usuario */
+        $('user-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            const abierto = $('user-menu').hidden;
+            $('user-menu').hidden = !abierto;
+            $('user-btn').setAttribute('aria-expanded', String(abierto));
+        });
+        document.addEventListener('click', () => { $('user-menu').hidden = true; });
+        $('logout').addEventListener('click', cerrarSesion);
+
+        /* Modal de cambio de contraseña */
+        const nueva = $('nueva'), conf = $('confirmar'), actual = $('actual'), msg = $('msg');
+
+        function validarReglas() {
+            const v = nueva.value;
+            $('r-len').classList.toggle('off', v.length < 8);
+            $('r-mix').classList.toggle('off', !(/[A-Za-z]/.test(v) && /\d/.test(v)));
+        }
+        nueva.addEventListener('input', validarReglas);
+
+        function abrirModal() {
+            $('form').reset();
+            msg.textContent = '';
+            validarReglas();
+            $('overlay').hidden = false;
+            actual.focus();
+        }
+        function cerrarModal() { $('overlay').hidden = true; }
+
+        $('open-modal').addEventListener('click', abrirModal);
+        $('cancel').addEventListener('click', cerrarModal);
+        $('overlay').addEventListener('click', e => { if (e.target === $('overlay')) cerrarModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarModal(); });
+
+        function mostrarConfirmacion(texto) {
+            $('toast-text').textContent = texto;
+            $('toast').hidden = false;
+            clearTimeout(mostrarConfirmacion.t);
+            mostrarConfirmacion.t = setTimeout(() => { $('toast').hidden = true; }, 6000);
+        }
+
+        $('form').addEventListener('submit', async e => {
+            e.preventDefault();
+            msg.textContent = '';
+
+            const v = nueva.value;
+            if (v.length < 8 || !/[A-Za-z]/.test(v) || !/\d/.test(v)) { msg.textContent = 'La nueva contraseña no cumple los requisitos.'; return; }
+            if (v !== conf.value) { msg.textContent = 'Las contraseñas nuevas no coinciden.'; return; }
+
+            $('save').disabled = true;
+            try {
+                const res = await fetch(API + '/api/auth/cambiar-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                    body: JSON.stringify({ passwordActual: actual.value, passwordNueva: v, confirmacion: conf.value })
+                });
+                if (res.status === 401) return cerrarSesion();
+
+                const data = await res.json();
+                if (!res.ok) { msg.textContent = (data.errores || ['No pudimos actualizar la contraseña.']).join(' '); return; }
+
+                token = data.token;
+                sessionStorage.setItem('token', token);
+                cerrarModal();
+                mostrarConfirmacion('Tu contraseña se actualizó correctamente.');
+            } catch {
+                msg.textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
+            } finally {
+                $('save').disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

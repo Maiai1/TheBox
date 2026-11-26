@@ -1,4 +1,4 @@
-const CACHE = 'thebox-v2';
+const CACHE = 'thebox-v4';
 
 const RECURSOS = [
     './',
@@ -12,6 +12,7 @@ const RECURSOS = [
     './Presupuesto.html',
     './manifest.json',
     './pwa.js',
+    './demo.js',
     './documentos.js',
     './vendor/jspdf.umd.min.js',
     './vendor/jszip.min.js',

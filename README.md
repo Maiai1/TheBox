@@ -30,6 +30,14 @@ La API y el frontend quedan disponibles en **http://localhost:5080**. La documen
 
 > En entorno `Development` la base se elimina y se vuelve a crear en cada arranque (`DbSeeder`), con datos de prueba. No ejecutar así en producción.
 
+## Demo en GitHub Pages
+
+El workflow `.github/workflows/deploy-pages.yml` publica el contenido de `TheBox Frontend/` en **https://maiai1.github.io/TheBox/** en cada push a `main`.
+
+Es una **demo estática con datos simulados**: GitHub Pages no ejecuta la API ASP.NET ni LocalDB. El archivo `demo.js` responde los endpoints con datos de ejemplo (idénticos a los del seeder) y muestra una etiqueta `DEMO · datos simulados`. Entrá con los usuarios de prueba de abajo o directamente al portal: la sesión se inicia automáticamente en la demo. Los cambios (pagos, vencimientos, siniestros) viven solo en la sesión del navegador.
+
+Para que el deployment funcione, en **Settings → Pages** del repositorio la fuente debe ser **GitHub Actions**.
+
 ## Usuarios de prueba
 
 | DNI | Contraseña | Observaciones |

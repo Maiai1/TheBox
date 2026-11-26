@@ -11,6 +11,7 @@ Gestión de asegurados de The Box Seguros: portal web para consultar pólizas, c
 
 - Gestión de pólizas, cuotas, pagos (pasarela simulada), comprobantes y siniestros.
 - Solicitud de cambio de fecha de vencimiento de cuotas impagas no vencidas: se permite hasta 15 días corridos después del vencimiento original, se actualiza el cronograma y se registra una notificación interna. Las pólizas con suspensión por impagos no son habilitadas.
+- Descarga de documentación de pólizas en PDF (frente de póliza, tarjeta de circulación digital y comprobante de vigencia), individual o en un ZIP. Los PDF se guardan en el dispositivo y se pueden consultar sin conexión desde la PWA.
 
 ## Requisitos
 

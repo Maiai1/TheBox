@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" role="img" aria-label="Automóvil">
+    <defs>
+        <linearGradient id="cuerpo" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#6ea8dc"/>
+            <stop offset="0.55" stop-color="#2d6cb0"/>
+            <stop offset="1" stop-color="#16325c"/>
+        </linearGradient>
+        <linearGradient id="ventana" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#d8ecff" stop-opacity="0.95"/>
+            <stop offset="1" stop-color="#4d8fc9" stop-opacity="0.8"/>
+        </linearGradient>
+        <radialGradient id="llanta">
+            <stop offset="0.45" stop-color="#c9d6e4"/>
+            <stop offset="0.5" stop-color="#2b3d55"/>
+            <stop offset="1" stop-color="#101d2e"/>
+        </radialGradient>
+    </defs>
+
+    <ellipse cx="400" cy="305" rx="330" ry="18" fill="#0b2545" opacity="0.12"/>
+
+    <path d="M96 246c-14-6-19-18-14-33l15-46c5-15 16-25 33-27l88-9c18-2 31-10 47-26l54-55c12-12 26-18 43-18h104c18 0 33 7 45 20l49 55c10 11 24 18 40 21l62 10c16 3 27 13 31 28l13 48c4 15-5 28-20 32-9 3-23 4-42 4H138c-19 0-33-1-42-4z" fill="url(#cuerpo)"/>
+
+    <path d="M290 116l48-48c7-7 15-10 25-10h88c11 0 20 4 27 12l41 46z" fill="url(#ventana)"/>
+    <path d="M330 107l43-42h34v42z" fill="#dcefff" opacity="0.5"/>
+    <path d="M450 65h3v58h-3z" fill="#16325c" opacity="0.55"/>
+    <path d="M480 116h70l-24-46c-2-5-6-7-11-7h-35z" fill="url(#ventana)"/>
+
+    <path d="M120 210c145 9 385 12 570 0" fill="none" stroke="#ffffff" stroke-opacity="0.35" stroke-width="5" stroke-linecap="round"/>
+    <path d="M150 246c130 8 370 9 520 0" fill="none" stroke="#0b2545" stroke-opacity="0.3" stroke-width="6" stroke-linecap="round"/>
+
+    <path d="M126 222h44c6 0 10 4 10 10v13c0 6-4 10-10 10h-49l-8-25z" fill="#ffe9a8"/>
+    <path d="M655 222h25c7 0 12 4 13 11l4 18h-42z" fill="#f3b7a8"/>
+
+    <g>
+        <circle cx="230" cy="268" r="58" fill="url(#llanta)"/>
+        <circle cx="230" cy="268" r="30" fill="#b9cadd"/>
+        <circle cx="230" cy="268" r="11" fill="#16325c"/>
+        <circle cx="585" cy="268" r="58" fill="url(#llanta)"/>
+        <circle cx="585" cy="268" r="30" fill="#b9cadd"/>
+        <circle cx="585" cy="268" r="11" fill="#16325c"/>
+    </g>
+</svg>

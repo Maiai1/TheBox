@@ -297,14 +297,17 @@
             position: relative;
             overflow: hidden;
             border-radius: .9rem;
+            aspect-ratio: 1600 / 671;
             min-height: 11rem;
             padding: 1.6rem 1.8rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
-            background-image: url('banner.jfif'),linear-gradient(100deg,#dfeaf8 0%,#bcd3ec 45%,#7d9cc0 100%);
-            background-size: cover;
-            background-position: center right
+            background-color: #dfeaf8;
+            background-image: url('banner.jfif');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat
         }
 
             .banner h2 {
@@ -322,16 +325,6 @@
                 color: var(--text);
                 max-width: 22rem;
                 position: relative
-            }
-
-            .banner svg.deco {
-                position: absolute;
-                right: 0;
-                bottom: 0;
-                width: 60%;
-                height: auto;
-                opacity: .55;
-                pointer-events: none
             }
 
         @media (max-width:800px) {
@@ -425,10 +418,6 @@
             </section>
 
             <section class="banner">
-                <svg class="deco" viewBox="0 0 400 140" fill="none" aria-hidden="true">
-                    <path d="M0 140V95l70-55 55 40 60-62 90 80 50-30 75 72z" fill="#5b7ca6" />
-                    <path d="M0 140V112l90-30 80 25 110-20 120 33v20z" fill="#3f5f8a" />
-                </svg>
                 <h2>Tu tranquilidad, siempre en camino.</h2>
                 <p>En THE BOX te acompañamos en cada kilómetro.</p>
             </section>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>The Box Seguros – Mis pagos</title>
+    <title>The Box Seguros – Mis pólizas</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -669,6 +669,100 @@
                 padding: 1.2rem 1rem
             }
         }
+
+        /* Documentación de la póliza */
+        .panel {
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .7rem;
+            padding: 1.1rem;
+            box-shadow: 0 1px 2px rgba(20,40,80,.04);
+            margin-top: 1.5rem
+        }
+
+        .documentacion h2,
+        .guardados h2 {
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--navy);
+            margin-bottom: .35rem
+        }
+
+        .docs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(13rem,1fr));
+            gap: .8rem;
+            margin: 1rem 0
+        }
+
+        .doc-card {
+            border: 1px solid var(--line);
+            border-radius: .6rem;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: .55rem;
+            background: #fbfcfe
+        }
+
+            .doc-card h3 {
+                font-size: 1rem;
+                font-weight: 700;
+                color: var(--navy)
+            }
+
+            .doc-card p {
+                font-size: .82rem;
+                line-height: 1.45;
+                color: var(--muted);
+                flex: 1
+            }
+
+            .doc-card .btn {
+                align-self: flex-start
+            }
+
+        .guardados {
+            margin-top: 1.7rem
+        }
+
+        .lista {
+            display: grid;
+            gap: .5rem;
+            margin-top: .7rem
+        }
+
+        .item-doc {
+            display: flex;
+            align-items: center;
+            gap: .8rem;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: .55rem;
+            padding: .7rem .9rem;
+            flex-wrap: wrap
+        }
+
+            .item-doc .info {
+                flex: 1;
+                min-width: 10rem
+            }
+
+            .item-doc strong {
+                display: block;
+                font-size: .9rem;
+                color: var(--ink)
+            }
+
+            .item-doc small {
+                font-size: .76rem;
+                color: var(--muted)
+            }
+
+            .item-doc .btn {
+                font-size: .8rem;
+                padding: .4rem .8rem
+            }
     </style>
     <script src="pwa.js" defer></script>
 </head>
@@ -698,17 +792,16 @@
     <div class="layout">
         <nav aria-label="Menú principal">
             <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
-            <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
-            <a href="MisPagos.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
+            <a href="MisPolizas.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
+            <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
             <a href="MisSiniestros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
             <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
-            <a href="MisDocumentos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /><path d="M9 13h6M9 17h4" /></svg>Mis documentos</a>
             <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
         </nav>
 
         <main>
-            <h1>Mis pagos</h1>
-            <p class="lead">Consultá el estado de tus cuotas.</p>
+            <h1>Mis pólizas</h1>
+            <p class="lead">Consultá tus cuotas y descargá la documentación de tus pólizas.</p>
 
             <div class="aviso error" id="error" role="alert" hidden></div>
 
@@ -731,6 +824,38 @@
                 </table>
                 <p class="vacio" id="estado-tabla">Cargando tus cuotas…</p>
             </div>
+
+            <section class="panel documentacion" id="documentacion" hidden>
+                <h2>Documentación de la póliza</h2>
+                <p class="lead">Generá la documentación y guardala en este dispositivo para consultarla sin conexión.</p>
+                <div class="docs-grid">
+                    <article class="doc-card">
+                        <h3>Frente de póliza</h3>
+                        <p>Datos de la póliza, el vehículo y el asegurado.</p>
+                        <button type="button" class="btn ghost" data-descargar="frente">Descargar PDF</button>
+                    </article>
+                    <article class="doc-card">
+                        <h3>Tarjeta de circulación digital</h3>
+                        <p>Identificación del vehículo asegurado.</p>
+                        <button type="button" class="btn ghost" data-descargar="tarjeta">Descargar PDF</button>
+                    </article>
+                    <article class="doc-card">
+                        <h3>Comprobante de vigencia</h3>
+                        <p>Constancia del período de cobertura.</p>
+                        <button type="button" class="btn ghost" data-descargar="vigencia">Descargar PDF</button>
+                    </article>
+                </div>
+                <div class="acciones">
+                    <button type="button" class="btn" id="btn-todos">Descargar todo (.zip)</button>
+                </div>
+                <p class="nota-test">Los PDF se generan con los datos de tu póliza y quedan guardados para uso offline.</p>
+            </section>
+
+            <section class="guardados">
+                <h2>Documentos guardados</h2>
+                <p class="lead">Disponibles sin conexión en este dispositivo.</p>
+                <div class="lista" id="lista-guardados"></div>
+            </section>
         </main>
     </div>
 
@@ -809,6 +934,9 @@
         </div>
     </div>
 
+    <script src="vendor/jspdf.umd.min.js"></script>
+    <script src="vendor/jszip.min.js"></script>
+    <script src="documentos.js"></script>
     <script>
         const API = 'http://localhost:5080';
         const PAGINA_LOGIN = 'LogIn.html';
@@ -818,7 +946,9 @@
         const token = sessionStorage.getItem('token');
         let polizas = [];
         let cuotas = [];
+        let perfil = null;
         let polizaActual = null;   // respuesta de /cuotas (estado de la póliza, mora, cuotas)
+        let docPoliza = null;      // respuesta de /polizas/{id} (datos para los PDF)
         let cuotaEnPago = null;
         let huboIntento = false;
 
@@ -856,7 +986,8 @@
                 if (!rPerfil || !rPolizas) return;
                 if (!rPerfil.ok || !rPolizas.ok) throw new Error();
 
-                $('user-name').textContent = (await rPerfil.json()).nombre;
+                perfil = await rPerfil.json();
+                $('user-name').textContent = perfil.nombre;
                 polizas = await rPolizas.json();
 
                 if (!polizas.length) {
@@ -874,7 +1005,7 @@
                 await cargarCuotas();
             } catch {
                 $('user-name').textContent = sessionStorage.getItem('nombre') || '';
-                mostrarError('No pudimos cargar tus pagos. Probá de nuevo en unos minutos.');
+                mostrarError('No pudimos cargar tus pólizas. Podés consultar igual los documentos guardados en este dispositivo.');
             }
         }
 
@@ -889,6 +1020,8 @@
             $('estado-tabla').hidden = false;
             $('estado-tabla').textContent = 'Cargando tus cuotas…';
             $('filas').replaceChildren();
+            $('documentacion').hidden = true;
+            docPoliza = null;
             try {
                 const res = await llamar(`/api/polizas/${$('poliza').value}/cuotas`);
                 if (!res) return;
@@ -897,12 +1030,110 @@
                 cuotas = polizaActual.cuotas;
                 pintarEstadoPoliza();
                 pintarCuotas();
+                await cargarDocumentacion();
             } catch {
                 mostrarError('No pudimos cargar las cuotas de la póliza.');
             }
         }
 
         $('poliza').addEventListener('change', cargarCuotas);
+
+        /* ---------- Documentación de la póliza ---------- */
+        async function cargarDocumentacion() {
+            try {
+                const res = await llamar(`/api/polizas/${$('poliza').value}`);
+                if (!res || !res.ok) throw new Error();
+                docPoliza = await res.json();
+                $('documentacion').hidden = false;
+            } catch {
+                docPoliza = null;
+                $('documentacion').hidden = true;
+                $('error').textContent = 'No pudimos cargar la documentación de la póliza. Podés consultar igual los documentos guardados.';
+                $('error').hidden = false;
+            }
+        }
+
+        document.querySelectorAll('[data-descargar]').forEach(boton => {
+            boton.addEventListener('click', async () => {
+                if (!docPoliza || !perfil) return;
+                const texto = boton.textContent;
+                boton.disabled = true;
+                boton.textContent = 'Generando…';
+                try {
+                    await Documentos.descargarUno(boton.dataset.descargar, docPoliza, perfil);
+                    await pintarGuardados();
+                } catch {
+                    $('error').textContent = 'No pudimos generar el PDF. Probá de nuevo en unos minutos.';
+                    $('error').hidden = false;
+                } finally {
+                    boton.disabled = false;
+                    boton.textContent = texto;
+                }
+            });
+        });
+
+        $('btn-todos').addEventListener('click', async () => {
+            if (!docPoliza || !perfil) return;
+            const boton = $('btn-todos');
+            const texto = boton.textContent;
+            boton.disabled = true;
+            boton.textContent = 'Generando…';
+            try {
+                await Documentos.descargarTodos(docPoliza, perfil);
+                await pintarGuardados();
+            } catch {
+                $('error').textContent = 'No pudimos generar el archivo comprimido. Probá de nuevo en unos minutos.';
+                $('error').hidden = false;
+            } finally {
+                boton.disabled = false;
+                boton.textContent = texto;
+            }
+        });
+
+        async function pintarGuardados() {
+            const lista = $('lista-guardados');
+            let docs = [];
+            try { docs = await Documentos.listar(); } catch { docs = []; }
+
+            if (!docs.length) {
+                lista.innerHTML = '<p class="vacio">Todavía no guardaste documentos en este dispositivo.</p>';
+                return;
+            }
+
+            lista.replaceChildren(...docs.map(d => {
+                const item = document.createElement('div');
+                item.className = 'item-doc';
+
+                const info = document.createElement('div');
+                info.className = 'info';
+                const titulo = document.createElement('strong');
+                titulo.textContent = d.titulo;
+                const detalle = document.createElement('small');
+                detalle.textContent = `Póliza ${d.polizaNumero} · Guardado ${new Date(d.fecha).toLocaleString('es-AR')}`;
+                info.append(titulo, detalle);
+
+                const abrir = document.createElement('button');
+                abrir.type = 'button';
+                abrir.className = 'btn ghost';
+                abrir.textContent = 'Abrir';
+                abrir.addEventListener('click', () => {
+                    const destino = window.open('', '_blank');
+                    Documentos.abrir(d.id, destino);
+                });
+
+                const borrar = document.createElement('button');
+                borrar.type = 'button';
+                borrar.className = 'btn ghost';
+                borrar.textContent = 'Eliminar';
+                borrar.addEventListener('click', async () => {
+                    await Documentos.eliminar(d.id);
+                    await pintarGuardados();
+                });
+
+                item.append(info, abrir, borrar);
+                return item;
+            }));
+        }
 
         function pintarEstadoPoliza() {
             const p = polizaActual;
@@ -1219,6 +1450,7 @@ ${fila('Medio de pago', c.medioPago)}${fila('Referencia', c.referencia)}
         document.addEventListener('click', () => { $('user-menu').hidden = true; });
         $('logout').addEventListener('click', cerrarSesion);
 
+        pintarGuardados();
         if (!token) cerrarSesion(); else iniciar();
     </script>
 </body>

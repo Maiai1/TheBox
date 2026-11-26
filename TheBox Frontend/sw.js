@@ -1,4 +1,4 @@
-const CACHE = 'thebox-v1';
+const CACHE = 'thebox-v2';
 
 const RECURSOS = [
     './',
@@ -7,7 +7,6 @@ const RECURSOS = [
     './MisPolizas.html',
     './MisPagos.html',
     './MisSiniestros.html',
-    './MisDocumentos.html',
     './MiPerfil.html',
     './Password.html',
     './Presupuesto.html',

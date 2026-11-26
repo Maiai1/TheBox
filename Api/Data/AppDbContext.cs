@@ -13,6 +13,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Pago> Pagos => Set<Pago>();
 
     public DbSet<Poliza> Polizas => Set<Poliza>();
+    public DbSet<Siniestro> Siniestros => Set<Siniestro>();
+    public DbSet<NotificacionInterna> Notificaciones => Set<NotificacionInterna>();
 
 
     protected override void OnModelCreating(ModelBuilder b)
@@ -83,6 +85,31 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(p => p.NumeroComprobante).HasMaxLength(20);
             e.Property(p => p.Estado).HasConversion<string>().HasMaxLength(20);
             e.HasOne(p => p.Cuota).WithMany().HasForeignKey(p => p.CuotaId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<Siniestro>(e =>
+        {
+            e.Property(s => s.Tipo).HasMaxLength(30).IsRequired();
+            e.Property(s => s.Lugar).HasMaxLength(200).IsRequired();
+            e.Property(s => s.Descripcion).HasMaxLength(2000).IsRequired();
+            e.Property(s => s.Estado).HasConversion<string>().HasMaxLength(20);
+            e.HasIndex(s => s.PolizaId);
+            e.HasOne(s => s.Poliza).WithMany().HasForeignKey(s => s.PolizaId).OnDelete(DeleteBehavior.Cascade);
+            e.HasMany(s => s.Documentos).WithOne().HasForeignKey(d => d.SiniestroId).OnDelete(DeleteBehavior.Cascade);
+            e.HasMany(s => s.Seguimiento).WithOne().HasForeignKey(x => x.SiniestroId).OnDelete(DeleteBehavior.Cascade);
+        });
+
+        b.Entity<DocumentoSiniestro>(e =>
+        {
+            e.Property(d => d.NombreOriginal).HasMaxLength(200).IsRequired();
+            e.Property(d => d.RutaRelativa).HasMaxLength(200).IsRequired();
+            e.Property(d => d.ContentType).HasMaxLength(50).IsRequired();
+        });
+
+        b.Entity<SeguimientoSiniestro>(e =>
+        {
+            e.Property(x => x.Estado).HasConversion<string>().HasMaxLength(20);
+            e.Property(x => x.Comentario).HasMaxLength(300).IsRequired();
         });
     }
 }

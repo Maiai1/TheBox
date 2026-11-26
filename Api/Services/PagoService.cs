@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using TheBox.Api.Data;
 using TheBox.Api.Domain;
 using TheBox.Api.Dtos;
@@ -9,7 +10,9 @@ public sealed record MedioPago(string Id, string Descripcion);
 
 public sealed record ResultadoPasarela(EstadoPago Estado, string Referencia, string Mensaje);
 
-public sealed record CuotaDto(int Id, int Numero, DateOnly Vencimiento, decimal Monto, string Estado, int? PagoId, bool Pagable);
+public sealed record CuotaDto(
+    int Id, int Numero, DateOnly Vencimiento, DateOnly VencimientoOriginal, decimal Monto, string Estado,
+    int? PagoId, bool Pagable, bool Reprogramable);
 
 public sealed record CuotasPoliza(int PolizaId, string Numero, string EstadoPoliza, bool EnMora, List<CuotaDto> Cuotas);
 
@@ -22,6 +25,8 @@ public sealed record ComprobanteDto(
     int Cuota, DateOnly Vencimiento, decimal Monto, string MedioPago, string Referencia);
 
 public sealed record ProximoPago(DateOnly Vencimiento, decimal Monto, string Poliza, bool Vencida);
+
+public sealed record CambioVencimientoRespuesta(int CuotaId, DateOnly VencimientoAnterior, DateOnly VencimientoNuevo, string Mensaje);
 
 // Contrato con la pasarela. Cuando se integre la real, se crea otra clase que implemente esta
 // interfaz y se cambia el registro en Program.cs: el resto del sistema no se toca.
@@ -54,6 +59,8 @@ public sealed class PasarelaSimulada : IPasarelaPago
 public sealed class PagosService(AppDbContext db, IPasarelaPago pasarela)
 {
     // Medios de prueba. La aplicación nunca recibe números de tarjeta: solo el id del medio elegido.
+    public const int MargenDiasVencimiento = 15;
+
     public static readonly MedioPago[] Medios =
     [
         new("visa-4242", "Visa terminada en 4242"),
@@ -82,9 +89,12 @@ public sealed class PagosService(AppDbContext db, IPasarelaPago pasarela)
             .ToDictionary(g => g.Key, g => g.Max(p => p.Id));
 
         var dtos = cuotas.Select(c => new CuotaDto(
-            c.Id, c.Numero, c.Vencimiento, c.Monto, EstadoVisible(c, hoy),
+            c.Id, c.Numero, c.Vencimiento, c.VencimientoOriginal, c.Monto, EstadoVisible(c, hoy),
             pagoPorCuota.TryGetValue(c.Id, out var pagoId) ? pagoId : (int?)null,
-            c.Estado == EstadoCuota.Pendiente && poliza.Estado != EstadoPoliza.Cancelada)).ToList();
+            c.Estado == EstadoCuota.Pendiente && poliza.Estado != EstadoPoliza.Cancelada,
+            // Solo se puede mover una cuota impaga que todavía no venció. Las condiciones de la póliza
+            // (activa y sin suspensiones previas) las valida el servidor al confirmar el cambio.
+            c.Estado == EstadoCuota.Pendiente && c.Vencimiento >= hoy)).ToList();
 
         return Resultado<CuotasPoliza>.Exito(
             new CuotasPoliza(poliza.Id, poliza.Numero, poliza.Estado.ToString(), poliza.EnMora, dtos));
@@ -164,6 +174,66 @@ public sealed class PagosService(AppDbContext db, IPasarelaPago pasarela)
             pago.Cuota.Numero, pago.Cuota.Vencimiento, pago.Monto, pago.MedioPago, pago.Referencia));
     }
 
+    public async Task<Resultado<CambioVencimientoRespuesta>> CambiarVencimientoAsync(
+        int aseguradoId, int cuotaId, DateOnly? nuevaFecha, CancellationToken ct)
+    {
+        var cuota = await db.Cuotas.Include(c => c.Poliza)
+            .FirstOrDefaultAsync(c => c.Id == cuotaId && c.Poliza.AseguradoId == aseguradoId, ct);
+        if (cuota is null)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status404NotFound, "La cuota no existe.");
+
+        var poliza = cuota.Poliza;
+
+        // Escenario 2: póliza con suspensión por impagos (actual o previa).
+        if (poliza.Estado == EstadoPoliza.Suspendida || poliza.TuvoSuspension)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status409Conflict,
+                "No cumplís con las condiciones habilitadas para cambiar la fecha de vencimiento: la póliza registra una suspensión por impagos.");
+        if (poliza.Estado != EstadoPoliza.Vigente)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status409Conflict,
+                "No cumplís con las condiciones habilitadas para cambiar la fecha de vencimiento: la póliza no está activa.");
+
+        var hoy = Hoy();
+        if (cuota.Estado == EstadoCuota.Pagada)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status409Conflict, "La cuota ya está paga.");
+        if (cuota.Vencimiento < hoy)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status409Conflict,
+                "La cuota ya venció, por lo que no se puede cambiar su fecha. Podés abonarla desde Mis pagos.");
+        if (nuevaFecha is null)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status400BadRequest,
+                "Elegí la nueva fecha de vencimiento.");
+
+        // Escenario 1: posterior al vencimiento original y hasta 15 días corridos después de ese original.
+        var nueva = nuevaFecha.Value;
+        var maxima = cuota.VencimientoOriginal.AddDays(MargenDiasVencimiento);
+        if (nueva <= cuota.VencimientoOriginal || nueva > maxima)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status400BadRequest,
+                $"La nueva fecha debe ser posterior al vencimiento original ({Fecha(cuota.VencimientoOriginal)}) y hasta el {Fecha(maxima)} ({MargenDiasVencimiento} días corridos).");
+        if (nueva < hoy)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status400BadRequest,
+                "La nueva fecha no puede ser anterior a hoy.");
+        if (nueva == cuota.Vencimiento)
+            return Resultado<CambioVencimientoRespuesta>.Falla(StatusCodes.Status400BadRequest,
+                "Esa ya es la fecha de vencimiento de la cuota.");
+
+        var anterior = cuota.Vencimiento;
+        var asegurado = await db.Asegurados.AsNoTracking().FirstAsync(a => a.Id == aseguradoId, ct);
+
+        // Se actualiza el cronograma y se registra la notificación interna en un único guardado (atómico).
+        cuota.Vencimiento = nueva;
+        db.Notificaciones.Add(new NotificacionInterna
+        {
+            Tipo = "CambioVencimiento",
+            PolizaId = poliza.Id,
+            CuotaId = cuota.Id,
+            Mensaje = $"{asegurado.Nombre} (DNI {asegurado.Dni}) cambió el vencimiento de la cuota {cuota.Numero} " +
+                      $"de la póliza {poliza.Numero}: del {Fecha(anterior)} al {Fecha(nueva)}."
+        });
+        await db.SaveChangesAsync(ct);
+
+        return Resultado<CambioVencimientoRespuesta>.Exito(new CambioVencimientoRespuesta(
+            cuota.Id, anterior, nueva, "La fecha de vencimiento se actualizó correctamente."));
+    }
+
     // Próxima cuota a pagar (la más antigua sin pagar) entre todas las pólizas no canceladas.
     public async Task<ProximoPago?> ProximoPagoAsync(int aseguradoId, CancellationToken ct)
     {
@@ -193,10 +263,15 @@ public sealed class PagosService(AppDbContext db, IPasarelaPago pasarela)
         poliza.EnMora = tieneVencidas;
 
         if (teniaMora && !tieneVencidas && poliza.Estado == EstadoPoliza.Suspendida)
+        {
             poliza.Estado = EstadoPoliza.Vigente;
+            poliza.TuvoSuspension = true; // queda registrado aunque la póliza ya se haya reactivado
+        }
     }
 
     private static DateOnly Hoy() => DateOnly.FromDateTime(DateTime.Today);
+
+    private static string Fecha(DateOnly fecha) => fecha.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture);
 
     private static string EstadoVisible(Cuota cuota, DateOnly hoy)
     {

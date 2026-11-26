@@ -6,6 +6,8 @@ namespace TheBox.Api.Endpoints;
 
 public sealed record PagarRequest(string? MedioPagoId);
 
+public sealed record CambiarVencimientoRequest(DateOnly? NuevaFecha);
+
 public static class PagosEndpoints
 {
     public static void MapPagosEndpoints(this WebApplication app)
@@ -17,6 +19,7 @@ public static class PagosEndpoints
         api.MapGet("/pagos/medios", () => Results.Ok(PagosService.Medios));
         api.MapGet("/pagos/proximo", ProximoAsync);
         api.MapPost("/cuotas/{cuotaId:int}/pagos", PagarAsync);
+        api.MapPost("/cuotas/{cuotaId:int}/vencimiento", CambiarVencimientoAsync);
         api.MapGet("/pagos/{pagoId:int}/comprobante", ComprobanteAsync);
     }
 
@@ -48,6 +51,15 @@ public static class PagosEndpoints
             return Results.Unauthorized();
 
         return Responder(await svc.PagarAsync(aseguradoId, cuotaId, req.MedioPagoId, ct));
+    }
+
+    private static async Task<IResult> CambiarVencimientoAsync(
+        int cuotaId, CambiarVencimientoRequest req, ClaimsPrincipal user, PagosService svc, CancellationToken ct)
+    {
+        if (!TryAseguradoId(user, out var aseguradoId))
+            return Results.Unauthorized();
+
+        return Responder(await svc.CambiarVencimientoAsync(aseguradoId, cuotaId, req.NuevaFecha, ct));
     }
 
     private static async Task<IResult> ComprobanteAsync(

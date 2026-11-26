@@ -31,5 +31,8 @@ public class Poliza
     // true mientras tenga al menos una cuota vencida sin pagar.
     public bool EnMora { get; set; }
 
+    // true si la póliza estuvo suspendida alguna vez por impagos (aunque ya esté reactivada).
+    public bool TuvoSuspension { get; set; }
+
     public List<Cuota> Cuotas { get; set; } = [];
 }

@@ -21,6 +21,10 @@ public class Cuota
 
     public int Numero { get; set; }
     public DateOnly Vencimiento { get; set; }
+
+    // Fecha que tenía la cuota al generarse el cronograma. El margen de postergación se mide contra esta
+    // fecha, así que los cambios sucesivos nunca pueden superar los 15 días desde el original.
+    public DateOnly VencimientoOriginal { get; set; }
     public decimal Monto { get; set; }
 
     // Solo se guarda Pendiente o Pagada. "Vencida" se calcula al consultar (Pendiente con fecha pasada).

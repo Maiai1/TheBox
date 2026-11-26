@@ -388,7 +388,7 @@
             <a href="Inicio.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
             <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
             <a href="MisPagos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
-            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="MisSiniestros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
             <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
             <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
         </nav>
@@ -418,7 +418,7 @@
                     <div class="card-title"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2" /><path d="M9 3h6v3H9zM12 11v6M9 14h6" /></svg></span>Mis siniestros</div>
                     <div class="big" id="siniestros-num">–</div>
                     <div class="sub"><span class="dot"></span><span id="siniestros-estado"></span></div>
-                    <div class="link"><a href="#">Ver siniestros <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
+                    <div class="link"><a href="MisSiniestros.html">Ver siniestros <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg></a></div>
                 </article>
             </section>
 
@@ -446,15 +446,14 @@
             location.replace(PAGINA_LOGIN);
         }
 
-        // DATOS DE EJEMPLO: todavía no hay endpoint de siniestros (pólizas y pagos ya son reales).
-        // Cuando existan, reemplazar este objeto por la respuesta de la API.
-        const resumen = {
-            siniestros: { cantidad: 1, estado: 'En análisis' }
-        };
-
-        function pintarResumen() {
-            $('siniestros-num').textContent = resumen.siniestros.cantidad;
-            $('siniestros-estado').textContent = resumen.siniestros.estado;
+        async function cargarSiniestros() {
+            try {
+                const res = await fetch(API + '/api/siniestros', { headers: { Authorization: 'Bearer ' + token } });
+                if (!res.ok) return;
+                const abiertos = (await res.json()).filter(s => s.estado !== 'Cerrado'); // vienen del más nuevo al más viejo
+                $('siniestros-num').textContent = abiertos.length;
+                $('siniestros-estado').textContent = abiertos.length ? abiertos[0].estado : 'Sin siniestros abiertos';
+            } catch { /* la tarjeta queda con el guion */ }
         }
 
         async function cargarProximoPago() {
@@ -489,7 +488,7 @@
                 const p = await res.json();
                 $('user-name').textContent = p.nombre;
                 $('saludo-nombre').textContent = p.nombre.split(' ')[0];
-                pintarResumen();
+                cargarSiniestros();
                 cargarPolizas();
                 cargarProximoPago();
             } catch {

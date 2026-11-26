@@ -18,6 +18,7 @@ builder.Services.AddScoped<SolicitudService>();
 builder.Services.AddSingleton<TokenService>();
 builder.Services.AddScoped<IPasarelaPago, PasarelaSimulada>();
 builder.Services.AddScoped<PagosService>();
+builder.Services.AddScoped<SiniestroService>();
 
 // El HTML se abre desde el disco (origen "null"), por eso en desarrollo se permite cualquier origen.
 // En producción: .WithOrigins("https://tu-dominio").
@@ -66,5 +67,6 @@ app.MapAuthEndpoints();
 app.MapPresupuestoEndpoints();
 app.MapPolizasEndpoints();
 app.MapPagosEndpoints();
+app.MapSiniestrosEndpoints();
 
 app.Run();

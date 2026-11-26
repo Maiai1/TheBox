@@ -42,6 +42,7 @@ public static class DbSeeder
         await db.SaveChangesAsync();
         await SembrarPolizasAsync(db);
         await SembrarCuotasAsync(db);
+        await SembrarSiniestrosAsync(db);
     }
 
     private static async Task AgregarSiNoExisteAsync(AppDbContext db, string password, Asegurado asegurado)
@@ -67,16 +68,80 @@ public static class DbSeeder
             Nueva(juan.Id, "POL-000123", "Toyota", "Corolla", 2022, "AB123CD", "Todo Riesgo",
                   EstadoPoliza.Vigente, new DateOnly(2024, 1, 1), new DateOnly(2024, 12, 31), 25000m, enMora: true),
             Nueva(juan.Id, "POL-000456", "Ford", "Ranger", 2021, "AA456BB", "Terceros Completo",
-                  EstadoPoliza.Suspendida, new DateOnly(2023, 6, 1), new DateOnly(2024, 5, 31), 36200m, enMora: true),
+                  EstadoPoliza.Suspendida, new DateOnly(2023, 6, 1), new DateOnly(2024, 5, 31), 36200m, enMora: true, tuvoSuspension: true),
             Nueva(juan.Id, "POL-000789", "Honda", "Wave", 2020, "A123BCD", "Responsabilidad Civil",
                   EstadoPoliza.Cancelada, new DateOnly(2022, 3, 1), new DateOnly(2023, 2, 28), 9800m),
 
             Nueva(maria.Id, "POL-000321", "Volkswagen", "Gol Trend", 2019, "AC789DE", "Terceros Completo",
                   EstadoPoliza.Vigente, new DateOnly(2026, 3, 1), new DateOnly(2027, 2, 28), 27400m),
             Nueva(maria.Id, "POL-000654", "Fiat", "Cronos", 2021, "AD321FG", "Todo Riesgo",
-                  EstadoPoliza.Suspendida, new DateOnly(2025, 8, 15), new DateOnly(2026, 8, 14), 41900m, enMora: true));
+                  EstadoPoliza.Suspendida, new DateOnly(2025, 8, 15), new DateOnly(2026, 8, 14), 41900m, enMora: true, tuvoSuspension: true));
 
         await db.SaveChangesAsync();
+    }
+
+    private static async Task SembrarSiniestrosAsync(AppDbContext db)
+    {
+        if (await db.Siniestros.AnyAsync())
+            return;
+
+        var polizas = await db.Polizas.ToDictionaryAsync(p => p.Numero);
+
+        // Juan: tres siniestros, uno en análisis y dos cerrados.
+        AgregarSiniestro(db, polizas["POL-000789"], new DateOnly(2023, 7, 5), "Accidente", "Av. Mitre 1500, Avellaneda",
+            "Colisión con otro vehículo al girar en una esquina. Daños en el lateral derecho.", EstadoSiniestro.Cerrado);
+        AgregarSiniestro(db, polizas["POL-000456"], new DateOnly(2023, 11, 20), "Robo", "Calle Belgrano 800, Lanús",
+            "Robo del vehículo estacionado en la vía pública durante la noche.", EstadoSiniestro.Cerrado);
+        AgregarSiniestro(db, polizas["POL-000123"], new DateOnly(2024, 3, 12), "Accidente", "Ruta 4 km 12, Lomas de Zamora",
+            "Choque en cadena por frenada brusca. Daños en el paragolpes delantero y el capó.", EstadoSiniestro.EnAnalisis);
+
+        // María: un siniestro en análisis.
+        AgregarSiniestro(db, polizas["POL-000321"], DateOnly.FromDateTime(DateTime.Today.AddDays(-20)), "Daños por granizo",
+            "Estacionamiento del trabajo, Quilmes",
+            "Granizo durante una tormenta. Abolladuras en el techo y el capó.", EstadoSiniestro.EnAnalisis);
+
+        await db.SaveChangesAsync();
+    }
+
+    private static void AgregarSiniestro(
+        AppDbContext db, Poliza poliza, DateOnly fecha, string tipo, string lugar, string descripcion, EstadoSiniestro estado)
+    {
+        var denuncia = fecha.ToDateTime(new TimeOnly(10, 0)).AddDays(1);
+
+        var siniestro = new Siniestro
+        {
+            PolizaId = poliza.Id,
+            Fecha = fecha,
+            Tipo = tipo,
+            Lugar = lugar,
+            Descripcion = descripcion,
+            Estado = estado,
+            FechaDenuncia = denuncia
+        };
+
+        siniestro.Seguimiento.Add(new SeguimientoSiniestro
+        {
+            Fecha = denuncia,
+            Estado = EstadoSiniestro.Recibido,
+            Comentario = "Denuncia registrada por el asegurado."
+        });
+        siniestro.Seguimiento.Add(new SeguimientoSiniestro
+        {
+            Fecha = denuncia.AddDays(2),
+            Estado = EstadoSiniestro.EnAnalisis,
+            Comentario = "Un asesor está evaluando la documentación presentada."
+        });
+        if (estado == EstadoSiniestro.Cerrado)
+        {
+            siniestro.Seguimiento.Add(new SeguimientoSiniestro
+            {
+                Fecha = denuncia.AddDays(20),
+                Estado = EstadoSiniestro.Cerrado,
+                Comentario = "Siniestro resuelto y liquidado."
+            });
+        }
+
+        db.Siniestros.Add(siniestro);
     }
 
     // Los vencimientos se arman relativos a hoy para que siempre haya cuotas vencidas y a vencer.
@@ -117,6 +182,7 @@ public static class DbSeeder
                 PolizaId = poliza.Id,
                 Numero = i + 1,
                 Vencimiento = hoy.AddDays(diasDesdeHoy[i]),
+                VencimientoOriginal = hoy.AddDays(diasDesdeHoy[i]),
                 Monto = poliza.PrimaMensual
             };
 
@@ -144,7 +210,7 @@ public static class DbSeeder
     private static Poliza Nueva(
         int aseguradoId, string numero, string marca, string modelo, int anio, string patente,
         string tipoSeguro, EstadoPoliza estado, DateOnly desde, DateOnly hasta, decimal prima,
-        bool enMora = false) => new()
+        bool enMora = false, bool tuvoSuspension = false) => new()
         {
             AseguradoId = aseguradoId,
             Numero = numero,
@@ -157,6 +223,7 @@ public static class DbSeeder
             VigenciaDesde = desde,
             VigenciaHasta = hasta,
             PrimaMensual = prima,
-            EnMora = enMora
+            EnMora = enMora,
+            TuvoSuspension = tuvoSuspension
         };
 }

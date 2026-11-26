@@ -628,7 +628,7 @@
             <a href="Inicio.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 3l9 8" /><path d="M5 10v10h14V10" /></svg>Inicio</a>
             <a href="MisPolizas.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l4 4v14H6z" /><path d="M14 3v4h4" /></svg>Mis pólizas</a>
             <a href="MisPagos.html" class="active" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="5" width="16" height="15" rx="2" /><path d="M4 10h16M9 3v4M15 3v4" /><path d="m9.5 15 2 2 3.5-3.5" /></svg>Mis pagos</a>
-            <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
+            <a href="MisSiniestros.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 4.5 3.2 7.8 8 9 4.8-1.2 8-4.5 8-9V6l-8-3Z" /><path d="M9 12h6M12 9v6" /></svg>Mis siniestros</a>
             <a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17V11a6 6 0 0 1 12 0v6l1.5 2h-15L6 17Z" /><path d="M10 21a2 2 0 0 0 4 0" /></svg>Notificaciones</a>
             <a href="MiPerfil.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4" /><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" /></svg>Mi perfil</a>
         </nav>
@@ -700,278 +700,282 @@
     </div>
 
     <script>
-const API = 'http://localhost:5080';
-const PAGINA_LOGIN = 'LogIn.html';
-const PAGINA_PASSWORD = 'Password.html';
+        const API = 'http://localhost:5080';
+        const PAGINA_LOGIN = 'LogIn.html';
+        const PAGINA_PASSWORD = 'Password.html';
 
-const $ = id => document.getElementById(id);
-const token = sessionStorage.getItem('token');
-let polizas = [];
-let cuotas = [];
-let polizaActual = null;   // respuesta de /cuotas (estado de la póliza, mora, cuotas)
-let cuotaEnPago = null;
-let huboIntento = false;
+        const $ = id => document.getElementById(id);
+        const token = sessionStorage.getItem('token');
+        let polizas = [];
+        let cuotas = [];
+        let polizaActual = null;   // respuesta de /cuotas (estado de la póliza, mora, cuotas)
+        let cuotaEnPago = null;
+        let huboIntento = false;
 
-function cerrarSesion() { sessionStorage.clear(); location.replace(PAGINA_LOGIN); }
+        function cerrarSesion() { sessionStorage.clear(); location.replace(PAGINA_LOGIN); }
 
-// 401 -> login, 403 -> todavía tiene la contraseña provisoria.
-async function llamar(ruta, opciones = {}) {
-  const res = await fetch(API + ruta, {
-    ...opciones,
-    headers: { Authorization: 'Bearer ' + token, ...(opciones.body ? { 'Content-Type': 'application/json' } : {}) }
-  });
-  if (res.status === 401) { cerrarSesion(); return null; }
-  if (res.status === 403) { location.replace(PAGINA_PASSWORD); return null; }
-  return res;
-}
+        // 401 -> login, 403 -> todavía tiene la contraseña provisoria.
+        async function llamar(ruta, opciones = {}) {
+            const res = await fetch(API + ruta, {
+                ...opciones,
+                headers: { Authorization: 'Bearer ' + token, ...(opciones.body ? { 'Content-Type': 'application/json' } : {}) }
+            });
+            if (res.status === 401) { cerrarSesion(); return null; }
+            if (res.status === 403) { location.replace(PAGINA_PASSWORD); return null; }
+            return res;
+        }
 
-const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
-const fmtMoneda = n => Number(n).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
-const clase = e => String(e).toLowerCase();
-const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+        const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
+        const fmtMoneda = n => Number(n).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+        const clase = e => String(e).toLowerCase();
+        const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-const ICONO = {
-  descarga: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
-  ok: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>',
-  error: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
-  espera: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
-  tarjeta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg>',
-  efectivo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>'
-};
+        const ICONO = {
+            descarga: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 11l5 5 5-5M5 20h14"/></svg>',
+            ok: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 5 5L20 7"/></svg>',
+            error: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+            espera: '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+            tarjeta: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/></svg>',
+            efectivo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>'
+        };
 
-/* ---------- Carga ---------- */
-async function iniciar() {
-  try {
-    const [rPerfil, rPolizas] = await Promise.all([llamar('/api/portal/me'), llamar('/api/polizas')]);
-    if (!rPerfil || !rPolizas) return;
-    if (!rPerfil.ok || !rPolizas.ok) throw new Error();
+        /* ---------- Carga ---------- */
+        async function iniciar() {
+            try {
+                const [rPerfil, rPolizas] = await Promise.all([llamar('/api/portal/me'), llamar('/api/polizas')]);
+                if (!rPerfil || !rPolizas) return;
+                if (!rPerfil.ok || !rPolizas.ok) throw new Error();
 
-    $('user-name').textContent = (await rPerfil.json()).nombre;
-    polizas = await rPolizas.json();
+                $('user-name').textContent = (await rPerfil.json()).nombre;
+                polizas = await rPolizas.json();
 
-    if (!polizas.length) {
-      $('estado-tabla').textContent = 'Todavía no tenés pólizas registradas.';
-      return;
-    }
+                if (!polizas.length) {
+                    $('estado-tabla').textContent = 'Todavía no tenés pólizas registradas.';
+                    return;
+                }
 
-    $('poliza').replaceChildren(...polizas.map(p => {
-      const o = document.createElement('option');
-      o.value = p.id;
-      o.textContent = `Póliza: ${p.numero} - ${p.vehiculo}`;
-      return o;
-    }));
-    $('selector').hidden = false;
-    await cargarCuotas();
-  } catch {
-    $('user-name').textContent = sessionStorage.getItem('nombre') || '';
-    mostrarError('No pudimos cargar tus pagos. Probá de nuevo en unos minutos.');
-  }
-}
+                $('poliza').replaceChildren(...polizas.map(p => {
+                    const o = document.createElement('option');
+                    o.value = p.id;
+                    o.textContent = `Póliza: ${p.numero} - ${p.vehiculo}`;
+                    return o;
+                }));
+                $('selector').hidden = false;
+                await cargarCuotas();
+            } catch {
+                $('user-name').textContent = sessionStorage.getItem('nombre') || '';
+                mostrarError('No pudimos cargar tus pagos. Probá de nuevo en unos minutos.');
+            }
+        }
 
-function mostrarError(msg) {
-  $('estado-tabla').hidden = true;
-  $('error').textContent = msg;
-  $('error').hidden = false;
-}
+        function mostrarError(msg) {
+            $('estado-tabla').hidden = true;
+            $('error').textContent = msg;
+            $('error').hidden = false;
+        }
 
-async function cargarCuotas() {
-  $('error').hidden = true;
-  $('estado-tabla').hidden = false;
-  $('estado-tabla').textContent = 'Cargando tus cuotas…';
-  $('filas').replaceChildren();
-  try {
-    const res = await llamar(`/api/polizas/${$('poliza').value}/cuotas`);
-    if (!res) return;
-    if (!res.ok) throw new Error();
-    polizaActual = await res.json();
-    cuotas = polizaActual.cuotas;
-    pintarEstadoPoliza();
-    pintarCuotas();
-  } catch {
-    mostrarError('No pudimos cargar las cuotas de la póliza.');
-  }
-}
+        async function cargarCuotas() {
+            $('error').hidden = true;
+            $('estado-tabla').hidden = false;
+            $('estado-tabla').textContent = 'Cargando tus cuotas…';
+            $('filas').replaceChildren();
+            try {
+                const res = await llamar(`/api/polizas/${$('poliza').value}/cuotas`);
+                if (!res) return;
+                if (!res.ok) throw new Error();
+                polizaActual = await res.json();
+                cuotas = polizaActual.cuotas;
+                pintarEstadoPoliza();
+                pintarCuotas();
+            } catch {
+                mostrarError('No pudimos cargar las cuotas de la póliza.');
+            }
+        }
 
-$('poliza').addEventListener('change', cargarCuotas);
+        $('poliza').addEventListener('change', cargarCuotas);
 
-function pintarEstadoPoliza() {
-  const p = polizaActual;
-  $('estado-poliza').hidden = false;
-  $('estado-poliza-badge').textContent = p.estadoPoliza;
-  $('estado-poliza-badge').className = 'badge ' + clase(p.estadoPoliza);
+        function pintarEstadoPoliza() {
+            const p = polizaActual;
+            $('estado-poliza').hidden = false;
+            $('estado-poliza-badge').textContent = p.estadoPoliza;
+            $('estado-poliza-badge').className = 'badge ' + clase(p.estadoPoliza);
 
-  let aviso = '';
-  if (p.estadoPoliza === 'Cancelada') aviso = 'Esta póliza está cancelada y no admite pagos. Comunicate con atención al cliente.';
-  else if (p.estadoPoliza === 'Suspendida' && p.enMora) aviso = 'Tu póliza está suspendida por falta de pago. Al abonar las cuotas vencidas se reactiva automáticamente.';
-  else if (p.enMora) aviso = 'Tenés cuotas vencidas. Abonalas para evitar la suspensión de tu póliza.';
-  $('aviso-mora').textContent = aviso;
-  $('aviso-mora').hidden = !aviso;
-}
+            let aviso = '';
+            if (p.estadoPoliza === 'Cancelada') aviso = 'Esta póliza está cancelada y no admite pagos. Comunicate con atención al cliente.';
+            else if (p.estadoPoliza === 'Suspendida' && p.enMora) aviso = 'Tu póliza está suspendida por falta de pago. Al abonar las cuotas vencidas se reactiva automáticamente.';
+            else if (p.enMora) aviso = 'Tenés cuotas vencidas. Abonalas para evitar la suspensión de tu póliza.';
+            $('aviso-mora').textContent = aviso;
+            $('aviso-mora').hidden = !aviso;
+        }
 
-function celda(texto) { const td = document.createElement('td'); td.textContent = texto; return td; }
+        function celda(texto) { const td = document.createElement('td'); td.textContent = texto; return td; }
 
-function pintarCuotas() {
-  $('filas').replaceChildren(...cuotas.map(c => {
-    const tr = document.createElement('tr');
+        function pintarCuotas() {
+            $('filas').replaceChildren(...cuotas.map(c => {
+                const tr = document.createElement('tr');
 
-    const tdEstado = document.createElement('td');
-    const badge = document.createElement('span');
-    badge.className = 'badge ' + clase(c.estado);
-    badge.textContent = c.estado;
-    tdEstado.append(badge);
+                const tdEstado = document.createElement('td');
+                const badge = document.createElement('span');
+                badge.className = 'badge ' + clase(c.estado);
+                badge.textContent = c.estado;
+                tdEstado.append(badge);
 
-    const tdAccion = document.createElement('td');
-    if (c.pagable) {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'btn pagar'; b.textContent = 'Pagar';
-      b.setAttribute('aria-label', `Pagar la cuota ${c.numero}`);
-      b.addEventListener('click', () => abrirPago(c));
-      tdAccion.append(b);
-    } else if (c.pagoId) {
-      const b = document.createElement('button');
-      b.type = 'button'; b.className = 'desc'; b.innerHTML = ICONO.descarga;
-      b.setAttribute('aria-label', `Descargar el comprobante de la cuota ${c.numero}`);
-      b.addEventListener('click', () => descargarComprobante(c.pagoId, b));
-      tdAccion.append(b);
-    }
+                const tdAccion = document.createElement('td');
+                if (c.pagable) {
+                    const b = document.createElement('button');
+                    b.type = 'button'; b.className = 'btn pagar'; b.textContent = 'Pagar';
+                    b.setAttribute('aria-label', `Pagar la cuota ${c.numero}`);
+                    b.addEventListener('click', () => abrirPago(c));
+                    tdAccion.append(b);
+                } else if (c.pagoId) {
+                    const b = document.createElement('button');
+                    b.type = 'button'; b.className = 'desc'; b.innerHTML = ICONO.descarga;
+                    b.setAttribute('aria-label', `Descargar el comprobante de la cuota ${c.numero}`);
+                    b.addEventListener('click', () => descargarComprobante(c.pagoId, b));
+                    tdAccion.append(b);
+                }
 
-    tr.append(celda(c.numero), celda(fmtFecha(c.vencimiento)), celda(fmtMoneda(c.monto)), tdEstado, tdAccion);
-    return tr;
-  }));
+                tr.append(celda(c.numero), celda(fmtFecha(c.vencimiento)), celda(fmtMoneda(c.monto)), tdEstado, tdAccion);
+                return tr;
+            }));
 
-  $('estado-tabla').hidden = cuotas.length > 0;
-  if (!cuotas.length) $('estado-tabla').textContent = 'Esta póliza no tiene cuotas registradas.';
-}
+            $('estado-tabla').hidden = cuotas.length > 0;
+            if (!cuotas.length) $('estado-tabla').textContent = 'Esta póliza no tiene cuotas registradas.';
+        }
 
-/* ---------- Pantalla de pago ---------- */
-function vistaSeleccion() {
-  $('vista-pago').hidden = false;
-  $('vista-resultado').hidden = true;
-  $('btn-cancelar').hidden = false;
-  $('btn-aceptar').hidden = false;
-  $('btn-aceptar').disabled = false;
-  $('btn-aceptar').textContent = 'Aceptar';
-  $('btn-reintentar').hidden = true;
-  $('btn-cerrar').hidden = true;
-  $('modal-error').hidden = true;
-}
+        /* ---------- Pantalla de pago ---------- */
+        function vistaSeleccion() {
+            $('vista-pago').hidden = false;
+            $('vista-resultado').hidden = true;
+            $('btn-cancelar').hidden = false;
+            $('btn-aceptar').hidden = false;
+            $('btn-aceptar').disabled = false;
+            $('btn-aceptar').textContent = 'Aceptar';
+            $('btn-reintentar').hidden = true;
+            $('btn-cerrar').hidden = true;
+            $('modal-error').hidden = true;
+        }
 
-async function abrirPago(c) {
-  cuotaEnPago = c;
-  huboIntento = false;
-  $('modal-titulo').textContent = `Pagar cuota ${c.numero}`;
-  $('r-poliza').textContent = polizaActual.numero;
-  $('r-cuota').textContent = `${c.numero} de ${cuotas.length}`;
-  $('r-venc').textContent = fmtFecha(c.vencimiento);
-  $('r-estado').textContent = c.estado;
-  $('r-monto').textContent = fmtMoneda(c.monto);
-  vistaSeleccion();
-  $('medios').replaceChildren();
-  $('overlay').hidden = false;
+        async function abrirPago(c) {
+            cuotaEnPago = c;
+            huboIntento = false;
+            $('modal-titulo').textContent = `Pagar cuota ${c.numero}`;
+            $('r-poliza').textContent = polizaActual.numero;
+            $('r-cuota').textContent = `${c.numero} de ${cuotas.length}`;
+            $('r-venc').textContent = fmtFecha(c.vencimiento);
+            $('r-estado').textContent = c.estado;
+            $('r-monto').textContent = fmtMoneda(c.monto);
+            vistaSeleccion();
+            $('medios').replaceChildren();
+            $('overlay').hidden = false;
 
-  try {
-    const res = await llamar('/api/pagos/medios');
-    if (!res) return;
-    if (!res.ok) throw new Error();
-    const medios = await res.json();
-    $('medios').replaceChildren(...medios.map((m, i) => {
-      const l = document.createElement('label'); l.className = 'medio';
-      const r = document.createElement('input'); r.type = 'radio'; r.name = 'medio'; r.value = m.id; r.checked = i === 0;
-      const ic = document.createElement('span'); ic.innerHTML = m.id === 'pagofacil' ? ICONO.efectivo : ICONO.tarjeta;
-      const t = document.createElement('span'); t.textContent = m.descripcion;
-      l.append(r, ic, t);
-      return l;
-    }));
-  } catch {
-    $('modal-error').textContent = 'No pudimos cargar los medios de pago.';
-    $('modal-error').hidden = false;
-    $('btn-aceptar').disabled = true;
-  }
-}
+            try {
+                const res = await llamar('/api/pagos/medios');
+                if (!res) return;
+                if (!res.ok) throw new Error();
+                const medios = await res.json();
+                $('medios').replaceChildren(...medios.map((m, i) => {
+                    const l = document.createElement('label'); l.className = 'medio';
+                    const r = document.createElement('input'); r.type = 'radio'; r.name = 'medio'; r.value = m.id; r.checked = i === 0;
+                    const ic = document.createElement('span'); ic.innerHTML = m.id === 'pagofacil' ? ICONO.efectivo : ICONO.tarjeta;
+                    const t = document.createElement('span'); t.textContent = m.descripcion;
+                    l.append(r, ic, t);
+                    return l;
+                }));
+            } catch {
+                $('modal-error').textContent = 'No pudimos cargar los medios de pago.';
+                $('modal-error').hidden = false;
+                $('btn-aceptar').disabled = true;
+            }
+        }
 
-$('btn-aceptar').addEventListener('click', async () => {
-  const medio = document.querySelector('input[name="medio"]:checked');
-  if (!medio) { $('modal-error').textContent = 'Elegí un medio de pago.'; $('modal-error').hidden = false; return; }
+        $('btn-aceptar').addEventListener('click', async () => {
+            const medio = document.querySelector('input[name="medio"]:checked');
+            if (!medio) { $('modal-error').textContent = 'Elegí un medio de pago.'; $('modal-error').hidden = false; return; }
 
-  $('modal-error').hidden = true;
-  $('btn-aceptar').disabled = true;
-  $('btn-aceptar').textContent = 'Procesando…';
-  await new Promise(r => setTimeout(r, 900)); // simula la espera de la pasarela
+            $('modal-error').hidden = true;
+            $('btn-aceptar').disabled = true;
+            $('btn-aceptar').textContent = 'Procesando…';
+            await new Promise(r => setTimeout(r, 900)); // simula la espera de la pasarela
 
-  try {
-    const res = await llamar(`/api/cuotas/${cuotaEnPago.id}/pagos`, { method: 'POST', body: JSON.stringify({ medioPagoId: medio.value }) });
-    if (!res) return;
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      $('modal-error').textContent = (data.errores || ['No pudimos procesar el pago.']).join(' ');
-      $('modal-error').hidden = false;
-      $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
-      return;
-    }
-    huboIntento = true;
-    mostrarResultado(data);
-  } catch {
-    $('modal-error').textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
-    $('modal-error').hidden = false;
-    $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
-  }
-});
+            try {
+                const res = await llamar(`/api/cuotas/${cuotaEnPago.id}/pagos`, { method: 'POST', body: JSON.stringify({ medioPagoId: medio.value }) });
+                if (!res) return;
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    $('modal-error').textContent = (data.errores || ['No pudimos procesar el pago.']).join(' ');
+                    $('modal-error').hidden = false;
+                    $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
+                    return;
+                }
+                huboIntento = true;
+                mostrarResultado(data);
+            } catch {
+                $('modal-error').textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
+                $('modal-error').hidden = false;
+                $('btn-aceptar').disabled = false; $('btn-aceptar').textContent = 'Aceptar';
+            }
+        });
 
-function mostrarResultado(r) {
-  const tipo = { Aprobado: 'ok', Rechazado: 'error', Pendiente: 'espera' }[r.estado];
-  const titulo = { Aprobado: '¡Pagado!', Rechazado: 'Pago rechazado', Pendiente: 'Pago pendiente' }[r.estado];
+        function mostrarResultado(r) {
+            const tipo = { Aprobado: 'ok', Rechazado: 'error', Pendiente: 'espera' }[r.estado];
+            const titulo = { Aprobado: '¡Pagado!', Rechazado: 'Pago rechazado', Pendiente: 'Pago pendiente' }[r.estado];
 
-  $('resultado').className = 'resultado ' + tipo;
-  $('resultado-icono').innerHTML = ICONO[tipo];
-  $('resultado-titulo').textContent = titulo;
-  let mensaje = r.mensaje;
-  if (r.estado === 'Aprobado' && r.comprobante) mensaje += ` Comprobante ${r.comprobante}.`;
-  if (r.estado !== 'Aprobado') mensaje += ' La cuota sigue pendiente de pago.';
-  $('resultado-mensaje').textContent = mensaje;
-  $('resultado-ref').textContent = 'Referencia: ' + r.referencia;
+            $('resultado').className = 'resultado ' + tipo;
+            $('resultado-icono').innerHTML = ICONO[tipo];
+            $('resultado-titulo').textContent = titulo;
+            let mensaje = r.mensaje;
+            if (r.estado === 'Aprobado' && r.comprobante) mensaje += ` Comprobante ${r.comprobante}.`;
+            if (r.estado !== 'Aprobado') mensaje += ' La cuota sigue pendiente de pago.';
+            $('resultado-mensaje').textContent = mensaje;
+            $('resultado-ref').textContent = 'Referencia: ' + r.referencia;
 
-  $('vista-pago').hidden = true;
-  $('vista-resultado').hidden = false;
-  $('btn-cancelar').hidden = true;
-  $('btn-aceptar').hidden = true;
-  $('btn-cerrar').hidden = false;
-  $('btn-reintentar').hidden = r.estado !== 'Rechazado';
-  $('btn-cerrar').focus();
-}
+            $('vista-pago').hidden = true;
+            $('vista-resultado').hidden = false;
+            $('btn-cancelar').hidden = true;
+            $('btn-aceptar').hidden = true;
+            $('btn-cerrar').hidden = false;
+            $('btn-reintentar').hidden = r.estado !== 'Rechazado';
+            $('btn-cerrar').focus();
+        }
 
-$('btn-reintentar').addEventListener('click', vistaSeleccion);
+        $('btn-reintentar').addEventListener('click', vistaSeleccion);
 
-async function cerrarPago() {
-  $('overlay').hidden = true;
-  if (huboIntento) { huboIntento = false; await cargarCuotas(); } // refleja el nuevo estado de cuota y póliza
-}
-$('btn-cerrar').addEventListener('click', cerrarPago);
-$('btn-cancelar').addEventListener('click', cerrarPago);
-document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarPago(); });
+        async function cerrarPago() {
+            $('overlay').hidden = true;
+            if (huboIntento) { huboIntento = false; await cargarCuotas(); } // refleja el nuevo estado de cuota y póliza
+        }
+        $('btn-cerrar').addEventListener('click', cerrarPago);
+        $('btn-cancelar').addEventListener('click', cerrarPago);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarPago(); });
 
-
+        /* ---------- Comprobante (archivo HTML que se puede abrir o imprimir como PDF) ---------- */
         async function descargarComprobante(pagoId, boton) {
-            const w = window.open('', '_blank');      // se abre en el clic, antes del fetch
             boton.disabled = true;
             try {
                 const res = await llamar(`/api/pagos/${pagoId}/comprobante`);
-                if (!res || !res.ok) throw new Error();
-                w.document.write(comprobanteHtml(await res.json()));
-                w.document.close();
-                w.onload = () => w.print();
+                if (!res) return;
+                if (!res.ok) throw new Error();
+                const c = await res.json();
+
+                const html = comprobanteHtml(c);
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(new Blob([html], { type: 'text/html;charset=utf-8' }));
+                a.download = `comprobante-${c.numero}.html`;
+                document.body.append(a); a.click(); a.remove();
+                setTimeout(() => URL.revokeObjectURL(a.href), 1000);
             } catch {
-                w.close();
-                mostrarError('No pudimos abrir el comprobante. Probá de nuevo en unos minutos.');
+                mostrarError('No pudimos descargar el comprobante. Probá de nuevo en unos minutos.');
             } finally {
                 boton.disabled = false;
             }
         }
 
-function comprobanteHtml(c) {
-  const f = c.fecha;
-  const fecha = new Date(/(Z|[+-]\d\d:\d\d)$/.test(f) ? f : f + 'Z').toLocaleString('es-AR');
-  const fila = (k, v) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`;
-  return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Comprobante ${esc(c.numero)}</title>
+        function comprobanteHtml(c) {
+            const f = c.fecha;
+            const fecha = new Date(/(Z|[+-]\d\d:\d\d)$/.test(f) ? f : f + 'Z').toLocaleString('es-AR');
+            const fila = (k, v) => `<tr><th>${esc(k)}</th><td>${esc(v)}</td></tr>`;
+            return `<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8"><title>Comprobante ${esc(c.numero)}</title>
 <style>body{font-family:Arial,sans-serif;color:#111827;max-width:34rem;margin:2rem auto;padding:0 1rem}
 h1{color:#16325c;margin-bottom:.2rem}.sub{color:#6b7280;margin-bottom:1.5rem}
 table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:.55rem .4rem;border-bottom:1px solid #e3e8f0}
@@ -982,19 +986,19 @@ th{color:#6b7280;font-weight:500;width:40%}.total td{font-size:1.2rem;font-weigh
 ${fila('Póliza', c.poliza)}${fila('Vehículo', c.vehiculo)}${fila('Cuota', c.cuota)}${fila('Vencimiento', fmtFecha(c.vencimiento))}
 ${fila('Medio de pago', c.medioPago)}${fila('Referencia', c.referencia)}
 <tr class="total"><th>Importe</th><td>${esc(fmtMoneda(c.monto))}</td></tr></table></body></html>`;
-}
+        }
 
-/* ---------- Menú de usuario ---------- */
-$('user-btn').addEventListener('click', e => {
-  e.stopPropagation();
-  const abierto = $('user-menu').hidden;
-  $('user-menu').hidden = !abierto;
-  $('user-btn').setAttribute('aria-expanded', String(abierto));
-});
-document.addEventListener('click', () => { $('user-menu').hidden = true; });
-$('logout').addEventListener('click', cerrarSesion);
+        /* ---------- Menú de usuario ---------- */
+        $('user-btn').addEventListener('click', e => {
+            e.stopPropagation();
+            const abierto = $('user-menu').hidden;
+            $('user-menu').hidden = !abierto;
+            $('user-btn').setAttribute('aria-expanded', String(abierto));
+        });
+        document.addEventListener('click', () => { $('user-menu').hidden = true; });
+        $('logout').addEventListener('click', cerrarSesion);
 
-if (!token) cerrarSesion(); else iniciar();
+        if (!token) cerrarSesion(); else iniciar();
     </script>
 </body>
 </html>

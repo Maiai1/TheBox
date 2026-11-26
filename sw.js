@@ -1,7 +1,9 @@
-const CACHE = 'thebox-v4';
+const CACHE = 'thebox-v5';
 
 const RECURSOS = [
     './',
+    './index.html',
+    './auto.svg',
     './Inicio.html',
     './LogIn.html',
     './MisPolizas.html',

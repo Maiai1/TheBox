@@ -1,4 +1,4 @@
-const CACHE = 'thebox-v6';
+const CACHE = 'thebox-v7';
 
 const RECURSOS = [
     './',

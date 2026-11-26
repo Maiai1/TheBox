@@ -34,7 +34,7 @@ La API y el frontend quedan disponibles en **http://localhost:5080**. La documen
 
 La rama `gh-pages` contiene el contenido de `TheBox Frontend/` en la raíz y se publica en **https://maiai1.github.io/TheBox/**. GitHub Pages no ejecuta la API ASP.NET ni LocalDB.
 
-Es una **demo estática con datos simulados**: el archivo `demo.js` responde los endpoints con datos de ejemplo (idénticos a los del seeder) y muestra una etiqueta `DEMO · datos simulados`. Entrá con los usuarios de prueba de abajo o directamente al portal: la sesión se inicia automáticamente en la demo. Los cambios (pagos, vencimientos, siniestros) viven solo en la sesión del navegador.
+Es una **demo estática con datos simulados**: el archivo `demo.js` responde los endpoints con datos de ejemplo (idénticos a los del seeder). Entrá con los usuarios de prueba de abajo o directamente al portal: la sesión se inicia automáticamente en la demo. Los cambios (pagos, vencimientos, siniestros) viven solo en la sesión del navegador.
 
 Para activarla, en **Settings → Pages** elegí **Deploy from a branch**, rama **`gh-pages`** y carpeta **/(root)**. Cada vez que cambie el frontend hay que actualizar esa rama (por ejemplo, copiando `TheBox Frontend/` a un checkout de `gh-pages`). No se usa GitHub Actions porque la cuenta no tiene Actions habilitado.
 

@@ -425,12 +425,4 @@
         if (!url.pathname.startsWith('/api/')) return fetchReal(input, init);
         return responder(url.pathname.replace(/^\/api/, ''), init || {});
     };
-
-    const aviso = document.createElement('div');
-    aviso.textContent = 'DEMO · datos simulados';
-    aviso.setAttribute('aria-hidden', 'true');
-    aviso.style.cssText = 'position:fixed;bottom:12px;right:12px;z-index:99999;pointer-events:none;' +
-        'background:#16325c;color:#fff;padding:.35rem .75rem;border-radius:999px;' +
-        'font:600 .72rem Inter,Arial,sans-serif;letter-spacing:.04em;opacity:.92;box-shadow:0 2px 8px rgba(0,0,0,.18)';
-    document.addEventListener('DOMContentLoaded', () => document.body && document.body.append(aviso));
 })();

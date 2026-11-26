@@ -354,6 +354,26 @@
                 min-width: 5.6rem
             }
 
+            .btn.reprogramar {
+                background: #eaf1fe;
+                color: var(--blue);
+                border: 1px solid #cfe0fb;
+                min-width: 6.4rem;
+                font-size: .84rem;
+                padding: .5rem .8rem
+            }
+
+                .btn.reprogramar:hover {
+                    background: #dbe7fb
+                }
+
+        .acciones-tabla {
+            display: flex;
+            gap: .4rem;
+            justify-content: center;
+            flex-wrap: wrap
+        }
+
         .desc {
             background: none;
             border: 0;
@@ -505,6 +525,43 @@
             justify-content: flex-end
         }
 
+        .campo {
+            display: grid;
+            gap: .35rem;
+            margin-bottom: .55rem
+        }
+
+            .campo label {
+                font-size: .84rem;
+                font-weight: 600;
+                color: var(--ink)
+            }
+
+            .campo input[type="date"] {
+                width: 100%;
+                height: 2.7rem;
+                border: 1px solid #d5dbe5;
+                border-radius: .55rem;
+                background: #fff;
+                padding: 0 .8rem;
+                font: inherit;
+                font-size: .92rem;
+                color: var(--ink);
+                outline: none
+            }
+
+                .campo input[type="date"]:focus {
+                    border-color: var(--blue);
+                    box-shadow: 0 0 0 .18rem rgba(37,99,235,.15)
+                }
+
+        .hint {
+            font-size: .78rem;
+            color: var(--muted);
+            line-height: 1.45;
+            margin-bottom: 1rem
+        }
+
         .resultado {
             text-align: center;
             padding: .4rem 0 1rem
@@ -652,7 +709,7 @@
             <div class="tabla-wrap">
                 <table>
                     <thead>
-                        <tr><th>Cuota</th><th>Vencimiento</th><th>Monto</th><th>Estado</th><th>Comprobante</th></tr>
+                        <tr><th>Cuota</th><th>Vencimiento</th><th>Monto</th><th>Estado</th><th>Acciones</th></tr>
                     </thead>
                     <tbody id="filas"></tbody>
                 </table>
@@ -699,6 +756,45 @@
         </div>
     </div>
 
+    <!-- Solicitud de cambio de fecha de vencimiento -->
+    <div class="overlay" id="overlay-fecha" hidden>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="fecha-titulo">
+            <h3 id="fecha-titulo">Cambiar vencimiento</h3>
+            <span class="tag">Postergación de hasta 15 días corridos</span>
+
+            <div id="vista-fecha">
+                <dl class="resumen">
+                    <div><dt>Póliza</dt><dd id="f-poliza"></dd></div>
+                    <div><dt>Cuota</dt><dd id="f-cuota"></dd></div>
+                    <div><dt>Vencimiento original</dt><dd id="f-original"></dd></div>
+                    <div><dt>Vencimiento actual</dt><dd id="f-actual"></dd></div>
+                    <div class="total"><dt>Monto</dt><dd id="f-monto"></dd></div>
+                </dl>
+                <div class="campo">
+                    <label for="f-nueva">Nueva fecha de vencimiento</label>
+                    <input type="date" id="f-nueva">
+                </div>
+                <p class="hint" id="f-hint"></p>
+                <p class="aviso error" id="f-error" role="alert" hidden></p>
+            </div>
+
+            <div id="vista-fecha-resultado" hidden>
+                <div class="resultado ok" id="f-resultado">
+                    <div class="icono" id="f-resultado-icono"></div>
+                    <h4 id="f-resultado-titulo"></h4>
+                    <p id="f-resultado-mensaje"></p>
+                </div>
+            </div>
+
+            <div class="acciones">
+                <button type="button" class="btn ghost" id="f-cancelar">Cancelar</button>
+                <button type="button" class="btn" id="f-aceptar">Confirmar</button>
+                <button type="button" class="btn" id="f-cerrar" hidden>Cerrar</button>
+            </div>
+            <p class="nota-test">Solo se pueden postergar cuotas impagas que todavía no vencieron.</p>
+        </div>
+    </div>
+
     <script>
         const API = 'http://localhost:5080';
         const PAGINA_LOGIN = 'LogIn.html';
@@ -711,6 +807,8 @@
         let polizaActual = null;   // respuesta de /cuotas (estado de la póliza, mora, cuotas)
         let cuotaEnPago = null;
         let huboIntento = false;
+        let cuotaEnCambio = null;
+        let huboCambio = false;
 
         function cerrarSesion() { sessionStorage.clear(); location.replace(PAGINA_LOGIN); }
 
@@ -727,6 +825,15 @@
 
         const fmtFecha = iso => { const [y, m, d] = iso.split('-'); return `${d}/${m}/${y}`; };
         const fmtMoneda = n => Number(n).toLocaleString('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 });
+
+        const hoyISO = () => {
+            const n = new Date();
+            return `${n.getFullYear()}-${String(n.getMonth() + 1).padStart(2, '0')}-${String(n.getDate()).padStart(2, '0')}`;
+        };
+        const sumarDias = (iso, dias) => {
+            const [y, m, d] = iso.split('-').map(Number);
+            return new Date(Date.UTC(y, m - 1, d + dias)).toISOString().slice(0, 10);
+        };
         const clase = e => String(e).toLowerCase();
         const esc = v => String(v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -821,19 +928,29 @@
                 tdEstado.append(badge);
 
                 const tdAccion = document.createElement('td');
+                const acciones = document.createElement('div');
+                acciones.className = 'acciones-tabla';
                 if (c.pagable) {
                     const b = document.createElement('button');
                     b.type = 'button'; b.className = 'btn pagar'; b.textContent = 'Pagar';
                     b.setAttribute('aria-label', `Pagar la cuota ${c.numero}`);
                     b.addEventListener('click', () => abrirPago(c));
-                    tdAccion.append(b);
-                } else if (c.pagoId) {
+                    acciones.append(b);
+                }
+                if (c.reprogramable) {
+                    const b = document.createElement('button');
+                    b.type = 'button'; b.className = 'btn reprogramar'; b.textContent = 'Cambiar fecha';
+                    b.setAttribute('aria-label', `Cambiar el vencimiento de la cuota ${c.numero}`);
+                    b.addEventListener('click', () => abrirCambio(c));
+                    acciones.append(b);
+                } else if (c.pagoId && !c.pagable) {
                     const b = document.createElement('button');
                     b.type = 'button'; b.className = 'desc'; b.innerHTML = ICONO.descarga;
                     b.setAttribute('aria-label', `Descargar el comprobante de la cuota ${c.numero}`);
                     b.addEventListener('click', () => descargarComprobante(c.pagoId, b));
-                    tdAccion.append(b);
+                    acciones.append(b);
                 }
+                tdAccion.append(acciones);
 
                 tr.append(celda(c.numero), celda(fmtFecha(c.vencimiento)), celda(fmtMoneda(c.monto)), tdEstado, tdAccion);
                 return tr;
@@ -947,7 +1064,104 @@
         }
         $('btn-cerrar').addEventListener('click', cerrarPago);
         $('btn-cancelar').addEventListener('click', cerrarPago);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('overlay').hidden) cerrarPago(); });
+
+        /* ---------- Cambio de fecha de vencimiento ---------- */
+        function abrirCambio(c) {
+            cuotaEnCambio = c;
+            huboCambio = false;
+            const original = c.vencimientoOriginal || c.vencimiento;
+            const min = [sumarDias(original, 1), hoyISO()].sort().pop();
+            const max = sumarDias(original, 15);
+
+            $('f-poliza').textContent = polizaActual.numero;
+            $('f-cuota').textContent = `${c.numero} de ${cuotas.length}`;
+            $('f-original').textContent = fmtFecha(original);
+            $('f-actual').textContent = fmtFecha(c.vencimiento);
+            $('f-monto').textContent = fmtMoneda(c.monto);
+            $('f-hint').textContent = `Elegí una fecha entre el ${fmtFecha(min)} y el ${fmtFecha(max)} (hasta 15 días corridos después del vencimiento original).`;
+            $('f-nueva').min = min;
+            $('f-nueva').max = max;
+            $('f-nueva').value = min > c.vencimiento ? min : max;
+            $('f-error').hidden = true;
+            $('vista-fecha').hidden = false;
+            $('vista-fecha-resultado').hidden = true;
+            $('f-cancelar').hidden = false;
+            $('f-aceptar').hidden = false;
+            $('f-aceptar').disabled = false;
+            $('f-aceptar').textContent = 'Confirmar';
+            $('f-cerrar').hidden = true;
+            $('overlay-fecha').hidden = false;
+            $('f-nueva').focus();
+        }
+
+        $('f-aceptar').addEventListener('click', async () => {
+            const nueva = $('f-nueva').value;
+            const min = $('f-nueva').min;
+            const max = $('f-nueva').max;
+            if (!nueva || nueva < min || nueva > max) {
+                $('f-error').textContent = `Elegí una fecha entre ${fmtFecha(min)} y ${fmtFecha(max)}.`;
+                $('f-error').hidden = false;
+                return;
+            }
+            if (nueva === cuotaEnCambio.vencimiento) {
+                $('f-error').textContent = 'Esa ya es la fecha de vencimiento de la cuota. Elegí otra.';
+                $('f-error').hidden = false;
+                return;
+            }
+
+            $('f-error').hidden = true;
+            $('f-aceptar').disabled = true;
+            $('f-aceptar').textContent = 'Guardando…';
+
+            try {
+                const res = await llamar(`/api/cuotas/${cuotaEnCambio.id}/vencimiento`, {
+                    method: 'POST',
+                    body: JSON.stringify({ nuevaFecha: nueva })
+                });
+                if (!res) return;
+                const data = await res.json().catch(() => ({}));
+                if (!res.ok) {
+                    $('f-error').textContent = (data.errores || ['No pudimos cambiar la fecha de vencimiento.']).join(' ');
+                    $('f-error').hidden = false;
+                    $('f-aceptar').disabled = false;
+                    $('f-aceptar').textContent = 'Confirmar';
+                    return;
+                }
+                huboCambio = true;
+                mostrarResultadoFecha(data);
+            } catch {
+                $('f-error').textContent = 'No pudimos conectar con el servidor. Probá de nuevo en unos minutos.';
+                $('f-error').hidden = false;
+                $('f-aceptar').disabled = false;
+                $('f-aceptar').textContent = 'Confirmar';
+            }
+        });
+
+        function mostrarResultadoFecha(r) {
+            $('f-resultado').className = 'resultado ok';
+            $('f-resultado-icono').innerHTML = ICONO.ok;
+            $('f-resultado-titulo').textContent = '¡Fecha actualizada!';
+            $('f-resultado-mensaje').textContent = `${r.mensaje} Nuevo vencimiento: ${fmtFecha(r.vencimientoNuevo)}.`;
+            $('vista-fecha').hidden = true;
+            $('vista-fecha-resultado').hidden = false;
+            $('f-cancelar').hidden = true;
+            $('f-aceptar').hidden = true;
+            $('f-cerrar').hidden = false;
+            $('f-cerrar').focus();
+        }
+
+        async function cerrarCambio() {
+            $('overlay-fecha').hidden = true;
+            if (huboCambio) { huboCambio = false; await cargarCuotas(); } // refleja el nuevo vencimiento en el cronograma
+        }
+        $('f-cancelar').addEventListener('click', cerrarCambio);
+        $('f-cerrar').addEventListener('click', cerrarCambio);
+
+        document.addEventListener('keydown', e => {
+            if (e.key !== 'Escape') return;
+            if (!$('overlay-fecha').hidden) cerrarCambio();
+            else if (!$('overlay').hidden) cerrarPago();
+        });
 
         /* ---------- Comprobante (archivo HTML que se puede abrir o imprimir como PDF) ---------- */
         async function descargarComprobante(pagoId, boton) {

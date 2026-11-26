@@ -7,6 +7,11 @@ Gestión de asegurados de The Box Seguros: portal web para consultar pólizas, c
 - **Backend:** ASP.NET Core 8 (minimal APIs), Entity Framework Core + SQL Server (LocalDB), autenticación JWT y BCrypt.
 - **Frontend:** HTML, CSS y JavaScript sin framework, servido por la propia API.
 
+## Funcionalidades
+
+- Gestión de pólizas, cuotas, pagos (pasarela simulada), comprobantes y siniestros.
+- Solicitud de cambio de fecha de vencimiento de cuotas impagas no vencidas: se permite hasta 15 días corridos después del vencimiento original, se actualiza el cronograma y se registra una notificación interna. Las pólizas con suspensión por impagos no son habilitadas.
+
 ## Requisitos
 
 - [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
